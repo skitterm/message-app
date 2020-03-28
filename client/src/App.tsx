@@ -1,26 +1,48 @@
-import React from "react";
-import logo from "./logo.svg";
+import React, { Component } from "react";
 import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface State {
+  messages: any[];
+}
+
+interface Props {}
+
+class App extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      messages: []
+    };
+  }
+
+  componentDidMount() {
+    fetch("/messages").then(response => {
+      response.json().then(items => {
+        this.setState({ messages: items });
+      });
+    });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <h1>Messaging App</h1>
+        <ul>
+          {this.state.messages.map(message => {
+            return (
+              <li key={message.message._id}>
+                <h4>
+                  Sender: {message.user.name.first} {message.user.name.last}
+                </h4>
+                <p>Message: {message.message.contents}</p>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    );
+  }
 }
 
 export default App;
