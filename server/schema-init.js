@@ -39,7 +39,7 @@ const runTheDB = async () => {
         last: "Johnson"
       },
       timeZone: "pacific",
-      profileImageUrl: "",
+      profileImageUrl: "blue.jpg",
       workingHours: [],
       rooms: [roomItem._id],
       unreadMessages: []
@@ -50,7 +50,7 @@ const runTheDB = async () => {
         last: "West"
       },
       timeZone: "pacific",
-      profileImageUrl: "",
+      profileImageUrl: "green.jpg",
       workingHours: [],
       rooms: [roomItem._id],
       unreadMessages: []

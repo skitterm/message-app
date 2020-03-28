@@ -28,14 +28,47 @@ class App extends Component<Props, State> {
     return (
       <div className="App">
         <h1>Messaging App</h1>
-        <ul>
+        <ul
+          style={{
+            listStyleType: "none"
+          }}
+        >
           {this.state.messages.map(message => {
+            const fullName = `${message.user.name.first} ${message.user.name.last}`;
             return (
-              <li key={message.message._id}>
-                <h4>
-                  Sender: {message.user.name.first} {message.user.name.last}
-                </h4>
-                <p>Message: {message.message.contents}</p>
+              <li
+                key={message.message._id}
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  marginBottom: "20px"
+                }}
+              >
+                <img
+                  src={`/temp_images/${message.user.profileImageUrl}`}
+                  alt={`Thumbnail for ${fullName}`}
+                  style={{
+                    width: "50px",
+                    height: "auto",
+                    paddingRight: "10px"
+                  }}
+                />
+                <div>
+                  <h4
+                    style={{
+                      margin: "0 0 4px"
+                    }}
+                  >
+                    {fullName}
+                  </h4>
+                  <p
+                    style={{
+                      marginTop: "0"
+                    }}
+                  >
+                    Message: {message.message.contents}
+                  </p>
+                </div>
               </li>
             );
           })}
