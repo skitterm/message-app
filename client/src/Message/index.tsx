@@ -8,7 +8,13 @@ export interface MessageProps {
 }
 
 export const Message = (props: MessageProps) => {
-  const time = new Date(props.time).toLocaleString();
+  const date = new Date(props.time);
+  const time = date.toLocaleString("en-us", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric"
+  });
 
   const styles = {
     container: {
