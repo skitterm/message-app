@@ -65,13 +65,13 @@ const runTheDB = async () => {
   const messageItems = [
     {
       sender: userOne._id,
-      timeSent: 1234,
+      timeSent: 1585423791755,
       contents: "Hey Joe, this is Bob",
       room: roomItem._id
     },
     {
       sender: userTwo._id,
-      timeSent: 5678,
+      timeSent: 1585623791755,
       contents: "Hey Bob, this is Joe",
       room: roomItem._id
     }
