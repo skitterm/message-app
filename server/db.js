@@ -15,6 +15,23 @@ const app = express();
   app.listen(3001, () => {
     console.log("app up and running");
 
+    app.get("/rooms", async (req, res) => {
+      const roomsCollection = db.collection("rooms");
+      const roomsAugmented = await roomsCollection
+        .aggregate([
+          {
+            $lookup: {
+              from: "users",
+              localField: "members",
+              foreignField: "_id",
+              as: "memberInfo"
+            }
+          }
+        ])
+        .toArray();
+      res.send(roomsAugmented);
+    });
+
     app.get("/messages", async (req, res) => {
       const messagesCollection = db.collection("messages");
       const messages = await messagesCollection.find({}).toArray();

@@ -4,6 +4,7 @@ import "./App.css";
 
 interface State {
   messages: any[];
+  rooms: any[];
 }
 
 interface Props {}
@@ -13,27 +14,44 @@ class App extends Component<Props, State> {
     super(props);
 
     this.state = {
-      messages: []
+      messages: [],
+      rooms: []
     };
   }
 
-  componentDidMount() {
-    fetch("/messages").then(response => {
-      response.json().then(items => {
-        this.setState({ messages: items });
-      });
-    });
+  async componentDidMount() {
+    const roomsResponse = await fetch("/rooms");
+    const roomsJson = await roomsResponse.json();
+    this.setState({ rooms: roomsJson });
+
+    const messagesResponse = await fetch("/messages");
+    const messageJson = await messagesResponse.json();
+    this.setState({ messages: messageJson });
   }
 
   render() {
+    const styles = {
+      list: {
+        listStyleType: "none"
+      }
+    };
+
     return (
       <div className="App">
         <h1>Messaging App</h1>
-        <ul
-          style={{
-            listStyleType: "none"
-          }}
-        >
+        {this.state.rooms.map(room => {
+          return (
+            <ul key={room._id} style={styles.list}>
+              {room.memberInfo.map((memberInfo: any) => {
+                const fullName = `${memberInfo.name.first} ${memberInfo.name.last}`;
+                return (
+                  <li key={`${room._id}-${memberInfo._id}`}>{fullName}</li>
+                );
+              })}
+            </ul>
+          );
+        })}
+        <ul style={styles.list}>
           {this.state.messages.map(message => {
             const fullName = `${message.user.name.first} ${message.user.name.last}`;
             return (
