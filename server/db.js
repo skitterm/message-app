@@ -1,4 +1,4 @@
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectID } = require("mongodb");
 const express = require("express");
 require("dotenv").config({ path: "../.env" });
 
@@ -32,9 +32,12 @@ const app = express();
       res.send(roomsAugmented);
     });
 
-    app.get("/messages", async (req, res) => {
+    app.get("/messages/:roomId", async (req, res) => {
       const messagesCollection = db.collection("messages");
-      const messages = await messagesCollection.find({}).toArray();
+      const messages = await messagesCollection
+        .find({ room: ObjectID(req.params.roomId) })
+        .toArray();
+
       const augmentedItems = await Promise.all(
         messages.map(async message => {
           const usersCollection = db.collection("users");

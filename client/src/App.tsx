@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import Message from "./Message";
+import MainTabPanel from "./MainTabPanel";
 
 interface State {
-  messages: any[];
   rooms: any[];
 }
 
@@ -13,7 +12,6 @@ class App extends Component<Props, State> {
     super(props);
 
     this.state = {
-      messages: [],
       rooms: []
     };
   }
@@ -22,10 +20,6 @@ class App extends Component<Props, State> {
     const roomsResponse = await fetch("/rooms");
     const roomsJson = await roomsResponse.json();
     this.setState({ rooms: roomsJson });
-
-    const messagesResponse = await fetch("/messages");
-    const messageJson = await messagesResponse.json();
-    this.setState({ messages: messageJson });
   }
 
   render() {
@@ -53,28 +47,18 @@ class App extends Component<Props, State> {
             return (
               <ul key={room._id} style={styles.list}>
                 {room.memberInfo.map((memberInfo: any) => {
-                  const fullName = `${memberInfo.name.first} ${memberInfo.name.last}`;
                   return (
-                    <li key={`${room._id}-${memberInfo._id}`}>{fullName}</li>
+                    <li key={`${room._id}-${memberInfo._id}`}>
+                      {memberInfo.name.first}
+                    </li>
                   );
                 })}
               </ul>
             );
           })}
-          <ul style={styles.list}>
-            {this.state.messages.map(message => {
-              const fullName = `${message.user.name.first} ${message.user.name.last}`;
-              return (
-                <Message
-                  key={message.message._id}
-                  name={fullName}
-                  time={message.message.timeSent}
-                  thumbnail={message.user.profileImageUrl}
-                  contents={message.message.contents}
-                />
-              );
-            })}
-          </ul>
+          {this.state.rooms && this.state.rooms.length > 0 && (
+            <MainTabPanel roomId={this.state.rooms[0]._id} />
+          )}
         </div>
       </div>
     );

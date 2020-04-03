@@ -30,7 +30,8 @@ const runTheDB = async () => {
   ];
 
   await hydrateCollection(roomsCollection, roomItems, "rooms");
-  const roomItem = await roomsCollection.findOne({});
+  const allRoomItems = await roomsCollection.find({}).toArray();
+  const [firstRoomItem, secondRoomItem] = allRoomItems;
 
   const userItems = [
     {
@@ -41,7 +42,7 @@ const runTheDB = async () => {
       timeZone: "pacific",
       profileImageUrl: "blue.jpg",
       workingHours: [],
-      rooms: [roomItem._id],
+      rooms: [firstRoomItem._id, secondRoomItem._id],
       unreadMessages: []
     },
     {
@@ -52,7 +53,18 @@ const runTheDB = async () => {
       timeZone: "pacific",
       profileImageUrl: "green.jpg",
       workingHours: [],
-      rooms: [roomItem._id],
+      rooms: [firstRoomItem._id],
+      unreadMessages: []
+    },
+    {
+      name: {
+        first: "Dave",
+        last: "Sanchez"
+      },
+      timeZone: "eastern",
+      profileImageUrl: "green.jpg",
+      workingHours: [],
+      rooms: [secondRoomItem._id],
       unreadMessages: []
     }
   ];
@@ -61,19 +73,32 @@ const runTheDB = async () => {
 
   const userOne = await usersCollection.findOne({ "name.first": "Bob" });
   const userTwo = await usersCollection.findOne({ "name.first": "Joe" });
+  const userThree = await usersCollection.findOne({ "name.first": "Dave" });
 
   const messageItems = [
     {
       sender: userOne._id,
       timeSent: 1585423791755,
       contents: "Hey Joe, this is Bob",
-      room: roomItem._id
+      room: firstRoomItem._id
     },
     {
       sender: userTwo._id,
       timeSent: 1585623791755,
       contents: "Hey Bob, this is Joe",
-      room: roomItem._id
+      room: firstRoomItem._id
+    },
+    {
+      sender: userOne._id,
+      timeSent: 1585423791755,
+      contents: "Hey Dave, this is Bob",
+      room: secondRoomItem._id
+    },
+    {
+      sender: userThree._id,
+      timeSent: 1585623791755,
+      contents: "Hey Bob, this is Dave",
+      room: secondRoomItem._id
     }
   ];
 
