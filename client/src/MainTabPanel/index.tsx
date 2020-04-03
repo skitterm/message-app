@@ -19,7 +19,6 @@ class MainTabPanel extends Component<Props, State> {
   }
 
   public async componentDidMount() {
-    console.log("roomId", this.props.roomId);
     const messagesResponse = await fetch(`/messages/${this.props.roomId}`);
     const messageJson = await messagesResponse.json();
     this.setState({ messages: messageJson });

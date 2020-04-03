@@ -3,6 +3,7 @@ import MainTabPanel from "./MainTabPanel";
 
 interface State {
   rooms: any[];
+  selectedRoomId: string;
 }
 
 interface Props {}
@@ -12,14 +13,17 @@ class App extends Component<Props, State> {
     super(props);
 
     this.state = {
-      rooms: []
+      rooms: [],
+      selectedRoomId: ""
     };
   }
 
   async componentDidMount() {
     const roomsResponse = await fetch("/rooms");
     const roomsJson = await roomsResponse.json();
-    this.setState({ rooms: roomsJson });
+    if (roomsJson && roomsJson.length > 0) {
+      this.setState({ rooms: roomsJson, selectedRoomId: roomsJson[0]._id });
+    }
   }
 
   render() {
@@ -56,8 +60,8 @@ class App extends Component<Props, State> {
               </ul>
             );
           })}
-          {this.state.rooms && this.state.rooms.length > 0 && (
-            <MainTabPanel roomId={this.state.rooms[0]._id} />
+          {this.state.selectedRoomId && (
+            <MainTabPanel roomId={this.state.selectedRoomId} />
           )}
         </div>
       </div>
