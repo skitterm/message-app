@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import variables from "../../styles/variables";
 
 export interface Props {
   id: string;
@@ -19,7 +20,7 @@ class Tab extends Component<Props> {
         marginBottom: "5px"
       },
       selected: {
-        borderLeftColor: "green"
+        borderLeftColor: variables.color.accent
       }
     };
 
