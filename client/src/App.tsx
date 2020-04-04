@@ -49,15 +49,15 @@ class App extends Component<Props, State> {
         <div style={styles.content}>
           {this.state.rooms.map(room => {
             return (
-              <ul key={room._id} style={styles.list}>
-                {room.memberInfo.map((memberInfo: any) => {
-                  return (
-                    <li key={`${room._id}-${memberInfo._id}`}>
-                      {memberInfo.name.first}
-                    </li>
-                  );
+              <button
+                key={room._id}
+                style={styles.list}
+                onClick={this.onTabClicked.bind(this, room._id)}
+              >
+                {room.memberInfo.map((memberInfo: any, index: number) => {
+                  return `${index > 0 ? "," : ""}${memberInfo.name.first}`;
                 })}
-              </ul>
+              </button>
             );
           })}
           {this.state.selectedRoomId && (
@@ -67,6 +67,12 @@ class App extends Component<Props, State> {
       </div>
     );
   }
+
+  private onTabClicked = (roomId: string) => {
+    this.setState({
+      selectedRoomId: roomId
+    });
+  };
 }
 
 export default App;

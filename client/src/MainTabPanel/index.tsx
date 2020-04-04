@@ -19,9 +19,13 @@ class MainTabPanel extends Component<Props, State> {
   }
 
   public async componentDidMount() {
-    const messagesResponse = await fetch(`/messages/${this.props.roomId}`);
-    const messageJson = await messagesResponse.json();
-    this.setState({ messages: messageJson });
+    await this.fetchMessages();
+  }
+
+  public async componentDidUpdate(prevProps: Props) {
+    if (this.props.roomId !== prevProps.roomId) {
+      await this.fetchMessages();
+    }
   }
 
   public render() {
@@ -48,6 +52,12 @@ class MainTabPanel extends Component<Props, State> {
       </ul>
     );
   }
+
+  private fetchMessages = async () => {
+    const messagesResponse = await fetch(`/messages/${this.props.roomId}`);
+    const messageJson = await messagesResponse.json();
+    this.setState({ messages: messageJson });
+  };
 }
 
 export default MainTabPanel;
