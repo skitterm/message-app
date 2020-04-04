@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import MainTabPanel from "./MainTabPanel";
+import Tab from "./SideTabBar/Tab";
 
 interface State {
   rooms: any[];
@@ -39,27 +40,34 @@ class App extends Component<Props, State> {
         display: "flex"
       },
       list: {
-        listStyleType: "none"
+        listStyleType: "none",
+        padding: "0",
+        display: "flex",
+        flexDirection: "column" as "column",
+        alignItems: "stretch"
       }
     };
 
     return (
-      <div className="App" style={styles.app}>
+      <div style={styles.app}>
         <h1 style={styles.title}>Messaging App</h1>
         <div style={styles.content}>
-          {this.state.rooms.map(room => {
-            return (
-              <button
-                key={room._id}
-                style={styles.list}
-                onClick={this.onTabClicked.bind(this, room._id)}
-              >
-                {room.memberInfo.map((memberInfo: any, index: number) => {
-                  return `${index > 0 ? "," : ""}${memberInfo.name.first}`;
-                })}
-              </button>
-            );
-          })}
+          <ul style={styles.list}>
+            {this.state.rooms.map(room => {
+              return (
+                <Tab
+                  key={room._id}
+                  id={room._id}
+                  isSelected={room._id === this.state.selectedRoomId}
+                  onClick={this.onTabClicked}
+                >
+                  {room.memberInfo.map((memberInfo: any, index: number) => {
+                    return `${index > 0 ? "," : ""}${memberInfo.name.first}`;
+                  })}
+                </Tab>
+              );
+            })}
+          </ul>
           {this.state.selectedRoomId && (
             <MainTabPanel roomId={this.state.selectedRoomId} />
           )}
