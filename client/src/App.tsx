@@ -15,7 +15,7 @@ class App extends Component<Props, State> {
 
     this.state = {
       rooms: [],
-      selectedRoomId: ""
+      selectedRoomId: "",
     };
   }
 
@@ -31,21 +31,21 @@ class App extends Component<Props, State> {
     const styles = {
       app: {
         margin: "auto",
-        width: "800px"
+        width: "800px",
       },
       title: {
-        textAlign: "center" as "center"
+        textAlign: "center" as "center",
       },
       content: {
-        display: "flex"
+        display: "flex",
       },
       list: {
         listStyleType: "none",
         padding: "0",
         display: "flex",
         flexDirection: "column" as "column",
-        alignItems: "stretch"
-      }
+        alignItems: "stretch",
+      },
     };
 
     return (
@@ -53,7 +53,7 @@ class App extends Component<Props, State> {
         <h1 style={styles.title}>Messaging App</h1>
         <div style={styles.content}>
           <ul style={styles.list}>
-            {this.state.rooms.map(room => {
+            {this.state.rooms.map((room) => {
               return (
                 <Tab
                   key={room._id}
@@ -78,7 +78,7 @@ class App extends Component<Props, State> {
 
   private onTabClicked = (roomId: string) => {
     this.setState({
-      selectedRoomId: roomId
+      selectedRoomId: roomId,
     });
   };
 }
