@@ -14,7 +14,7 @@ class MainTabPanel extends Component<Props, State> {
     super(props);
 
     this.state = {
-      messages: []
+      messages: [],
     };
   }
 
@@ -31,13 +31,13 @@ class MainTabPanel extends Component<Props, State> {
   public render() {
     const styles = {
       list: {
-        listStyleType: "none"
-      }
+        listStyleType: "none",
+      },
     };
 
     return (
       <ul style={styles.list}>
-        {this.state.messages.map(message => {
+        {this.state.messages.map((message) => {
           const fullName = `${message.user.name.first} ${message.user.name.last}`;
           return (
             <Message
@@ -54,7 +54,9 @@ class MainTabPanel extends Component<Props, State> {
   }
 
   private fetchMessages = async () => {
-    const messagesResponse = await fetch(`/messages/${this.props.roomId}`);
+    const messagesResponse = await fetch(
+      `/rooms/${this.props.roomId}/messages`
+    );
     const messageJson = await messagesResponse.json();
     this.setState({ messages: messageJson });
   };

@@ -3,10 +3,10 @@ const express = require("express");
 require("dotenv").config({ path: "../.env" });
 
 const app = express();
-(async function() {
+(async function () {
   const client = new MongoClient(process.env.DB_URL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   });
 
   await client.connect();
@@ -24,27 +24,27 @@ const app = express();
               from: "users",
               localField: "members",
               foreignField: "_id",
-              as: "memberInfo"
-            }
-          }
+              as: "memberInfo",
+            },
+          },
         ])
         .toArray();
       res.send(roomsAugmented);
     });
 
-    app.get("/messages/:roomId", async (req, res) => {
+    app.get("/rooms/:id/messages", async (req, res) => {
       const messagesCollection = db.collection("messages");
       const messages = await messagesCollection
-        .find({ room: ObjectID(req.params.roomId) })
+        .find({ room: ObjectID(req.params.id) })
         .toArray();
 
       const augmentedItems = await Promise.all(
-        messages.map(async message => {
+        messages.map(async (message) => {
           const usersCollection = db.collection("users");
           const user = await usersCollection.findOne({ _id: message.sender });
           return {
             message,
-            user
+            user,
           };
         })
       );
