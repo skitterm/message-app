@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Header from "../Header";
 import MainTabPanel from "../MainTabPanel";
 import Tab from "../SideTabBar/Tab";
 
@@ -50,6 +51,7 @@ class Index extends Component<Props, State> {
 
     return (
       <div style={styles.app}>
+        <Header path="/profile" label="Profile" />
         <h1 style={styles.title}>Messaging App</h1>
         <div style={styles.content}>
           <ul style={styles.list}>
