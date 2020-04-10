@@ -1,86 +1,33 @@
 import React, { Component } from "react";
-import MainTabPanel from "./MainTabPanel";
-import Tab from "./SideTabBar/Tab";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import Index from "./pages/Index";
+import Profile from "./pages/Profile";
 
-interface State {
-  rooms: any[];
-  selectedRoomId: string;
-}
-
-interface Props {}
-
-class App extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      rooms: [],
-      selectedRoomId: "",
-    };
-  }
-
-  async componentDidMount() {
-    const roomsResponse = await fetch("/rooms");
-    const roomsJson = await roomsResponse.json();
-    if (roomsJson && roomsJson.length > 0) {
-      this.setState({ rooms: roomsJson, selectedRoomId: roomsJson[0]._id });
-    }
-  }
-
+class App extends Component {
   render() {
-    const styles = {
-      app: {
-        margin: "auto",
-        width: "800px",
-      },
-      title: {
-        textAlign: "center" as "center",
-      },
-      content: {
-        display: "flex",
-      },
-      list: {
-        listStyleType: "none",
-        padding: "0",
-        display: "flex",
-        flexDirection: "column" as "column",
-        alignItems: "stretch",
-      },
-    };
-
     return (
-      <div style={styles.app}>
-        <h1 style={styles.title}>Messaging App</h1>
-        <div style={styles.content}>
-          <ul style={styles.list}>
-            {this.state.rooms.map((room) => {
-              return (
-                <Tab
-                  key={room._id}
-                  id={room._id}
-                  isSelected={room._id === this.state.selectedRoomId}
-                  onClick={this.onTabClicked}
-                >
-                  {room.memberInfo.map((memberInfo: any, index: number) => {
-                    return `${index > 0 ? "," : ""}${memberInfo.name.first}`;
-                  })}
-                </Tab>
-              );
-            })}
+      <Router>
+        <header>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/profile">Profile</Link>
+            </li>
           </ul>
-          {this.state.selectedRoomId && (
-            <MainTabPanel roomId={this.state.selectedRoomId} />
-          )}
-        </div>
-      </div>
+        </header>
+        <Switch>
+          <Route path="/profile">
+            <Profile />
+          </Route>
+          <Route path="/">
+            <Index />
+          </Route>
+        </Switch>
+      </Router>
     );
   }
-
-  private onTabClicked = (roomId: string) => {
-    this.setState({
-      selectedRoomId: roomId,
-    });
-  };
 }
 
 export default App;
