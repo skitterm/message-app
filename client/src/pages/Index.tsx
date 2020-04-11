@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import ContentContainer from "../components/ContentContainer";
-import Header from "../Header";
-import MainTabPanel from "../MainTabPanel";
-import Tab from "../SideTabBar/Tab";
+import Header from "../components/Header";
+import MainTabPanel from "../components/MainTabPanel";
+import Tab from "../components/Tab";
 
 interface State {
   rooms: any[];

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ContentContainer from "../components/ContentContainer";
-import Header from "../Header";
+import Header from "../components/Header";
 
 class Profile extends Component {
   public render() {
