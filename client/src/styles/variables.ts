@@ -4,8 +4,11 @@ const variables = {
     success: "#13620c",
     danger: "#ac2e11",
     backgroundLight: "#fafafa",
-    textDark: "#222"
-  }
+    black: "#000",
+    textDark: "#222",
+    offWhite: "#eee",
+    white: "#fff",
+  },
 };
 
 export default variables;
