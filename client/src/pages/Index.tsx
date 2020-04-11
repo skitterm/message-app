@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import ContentContainer from "../components/ContentContainer";
 import Header from "../Header";
 import MainTabPanel from "../MainTabPanel";
 import Tab from "../SideTabBar/Tab";
@@ -10,11 +11,6 @@ interface State {
 }
 
 export interface Props {}
-
-const App = styled.div`
-  margin: auto;
-  width: 800px;
-`;
 
 const Title = styled.h1`
   text-align: center;
@@ -52,7 +48,7 @@ class Index extends Component<Props, State> {
 
   public render() {
     return (
-      <App>
+      <ContentContainer>
         <Header path="/profile" label="Profile" />
         <Title>Messaging App</Title>
         <Content>
@@ -76,7 +72,7 @@ class Index extends Component<Props, State> {
             <MainTabPanel roomId={this.state.selectedRoomId} />
           )}
         </Content>
-      </App>
+      </ContentContainer>
     );
   }
 
