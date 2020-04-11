@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import styled from "styled-components";
 import variables from "../../styles/variables";
 
 export interface Props {
@@ -7,35 +8,25 @@ export interface Props {
   onClick: (id: string) => void;
 }
 
+const Button = styled.button<{ isSelected: boolean }>`
+  display: block;
+  width: 100%;
+  text-align: start;
+  padding: 5px 15px;
+  border: none;
+  border-left: 3px solid transparent;
+  border-left-color: ${(props) =>
+    props.isSelected ? variables.color.accent : "transparent"};
+  margin-bottom: 5px;
+`;
+
 class Tab extends Component<Props> {
   public render() {
-    const styles = {
-      button: {
-        display: "block",
-        width: "100%",
-        textAlign: "start" as "start",
-        padding: "5px 15px",
-        border: "none",
-        borderLeft: "3px solid transparent",
-        marginBottom: "5px"
-      },
-      selected: {
-        borderLeftColor: variables.color.accent
-      }
-    };
-
-    const finalStyles = this.props.isSelected
-      ? {
-          ...styles.button,
-          ...styles.selected
-        }
-      : styles.button;
-
     return (
       <li>
-        <button onClick={this.onClick} style={finalStyles}>
+        <Button onClick={this.onClick} isSelected={this.props.isSelected}>
           {this.props.children}
-        </button>
+        </Button>
       </li>
     );
   }

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import styled from "styled-components";
 import Header from "../Header";
 import MainTabPanel from "../MainTabPanel";
 import Tab from "../SideTabBar/Tab";
@@ -9,6 +10,27 @@ interface State {
 }
 
 export interface Props {}
+
+const App = styled.div`
+  margin: auto;
+  width: 800px;
+`;
+
+const Title = styled.h1`
+  text-align: center;
+`;
+
+const Content = styled.div`
+  display: flex;
+`;
+
+const List = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`;
 
 class Index extends Component<Props, State> {
   constructor(props: Props) {
@@ -29,32 +51,12 @@ class Index extends Component<Props, State> {
   }
 
   public render() {
-    const styles = {
-      app: {
-        margin: "auto",
-        width: "800px",
-      },
-      title: {
-        textAlign: "center" as "center",
-      },
-      content: {
-        display: "flex",
-      },
-      list: {
-        listStyleType: "none",
-        padding: "0",
-        display: "flex",
-        flexDirection: "column" as "column",
-        alignItems: "stretch",
-      },
-    };
-
     return (
-      <div style={styles.app}>
+      <App>
         <Header path="/profile" label="Profile" />
-        <h1 style={styles.title}>Messaging App</h1>
-        <div style={styles.content}>
-          <ul style={styles.list}>
+        <Title>Messaging App</Title>
+        <Content>
+          <List>
             {this.state.rooms.map((room) => {
               return (
                 <Tab
@@ -69,12 +71,12 @@ class Index extends Component<Props, State> {
                 </Tab>
               );
             })}
-          </ul>
+          </List>
           {this.state.selectedRoomId && (
             <MainTabPanel roomId={this.state.selectedRoomId} />
           )}
-        </div>
-      </div>
+        </Content>
+      </App>
     );
   }
 

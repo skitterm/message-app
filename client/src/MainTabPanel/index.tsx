@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import styled from "styled-components";
 import Message from "../Message";
 
 interface State {
@@ -8,6 +9,10 @@ interface State {
 export interface Props {
   roomId: string;
 }
+
+const List = styled.ul`
+  list-style-type: none;
+`;
 
 class MainTabPanel extends Component<Props, State> {
   constructor(props: Props) {
@@ -29,14 +34,8 @@ class MainTabPanel extends Component<Props, State> {
   }
 
   public render() {
-    const styles = {
-      list: {
-        listStyleType: "none",
-      },
-    };
-
     return (
-      <ul style={styles.list}>
+      <List>
         {this.state.messages.map((message) => {
           const fullName = `${message.user.name.first} ${message.user.name.last}`;
           return (
@@ -49,7 +48,7 @@ class MainTabPanel extends Component<Props, State> {
             />
           );
         })}
-      </ul>
+      </List>
     );
   }
 

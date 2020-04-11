@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 export interface MessageProps {
   name: string;
@@ -7,58 +8,60 @@ export interface MessageProps {
   contents: string;
 }
 
+const Container = styled.li`
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+`;
+
+const Thumbnail = styled.img`
+  width: 50px;
+  height: auto;
+  padding-right: 10px;
+`;
+
+const FirstRow = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Name = styled.h4`
+  margin: 0 0 4px;
+`;
+
+const Time = styled.span`
+  margin-left: 5px;
+  font-style: italic;
+  font-size: 12px;
+`;
+
+const Contents = styled.p`
+  margin-top: 0;
+`;
+
 export const Message = (props: MessageProps) => {
   const date = new Date(props.time);
   const time = date.toLocaleString("en-us", {
     month: "short",
     day: "numeric",
     hour: "numeric",
-    minute: "numeric"
+    minute: "numeric",
   });
 
-  const styles = {
-    container: {
-      display: "flex",
-      alignItems: "flex-start",
-      marginBottom: "20px"
-    },
-    thumbnail: {
-      width: "50px",
-      height: "auto",
-      paddingRight: "10px"
-    },
-    firstRow: {
-      display: "flex",
-      alignItems: "center"
-    },
-    name: {
-      margin: "0 0 4px"
-    },
-    time: {
-      marginLeft: "5px",
-      fontStyle: "italic",
-      fontSize: "12px"
-    },
-    contents: {
-      marginTop: "0"
-    }
-  };
-
   return (
-    <li style={styles.container}>
-      <img
+    <Container>
+      <Thumbnail
         src={`/temp_images/${props.thumbnail}`}
         alt={`Thumbnail for ${props.name}`}
-        style={styles.thumbnail}
       />
       <div>
-        <div style={styles.firstRow}>
-          <h4 style={styles.name}>{props.name}</h4>
-          <span style={styles.time}>{time}</span>
-        </div>
-        <p style={styles.contents}>Message: {props.contents}</p>
+        <FirstRow>
+          <Name>{props.name}</Name>
+          <Time>{time}</Time>
+        </FirstRow>
+        <Contents>Message: {props.contents}</Contents>
       </div>
-    </li>
+    </Container>
   );
 };
 
