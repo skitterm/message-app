@@ -12,6 +12,7 @@ _Brief description of the issue_
 
 ## Tasks
 _List of tasks to be completed_
+- [ ] (if time) Spruce up UI
 
 ## Acceptance criteria
 _List of criteria_
