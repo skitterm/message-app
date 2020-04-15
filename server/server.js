@@ -17,11 +17,19 @@ const app = express();
 
     app.get("/users/:id", async (req, res) => {
       const usersCollection = db.collection("users");
-      const user = await usersCollection.findOne({
-        _id: ObjectID(req.params.id),
-      });
+      try {
+        const user = await usersCollection.findOne({
+          _id: ObjectID(req.params.id),
+        });
 
-      res.send(user);
+        if (!user) {
+          throw new Error("No user found");
+        }
+        res.send(user);
+      } catch (error) {
+        console.log(error);
+        res.status(404).send({ message: "Unable to find a user with that ID" });
+      }
     });
 
     app.get("/rooms", async (req, res) => {

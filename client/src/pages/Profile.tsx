@@ -23,10 +23,17 @@ class Profile extends Component<{}, State> {
     const urlParts = window.location.pathname.split("/");
     const id = urlParts[urlParts.length - 1];
 
-    const userResponse = await fetch(`/users/${id}`);
-    const user = await userResponse.json();
-    if (user && user.name) {
-      this.setState({ firstName: user.name.first, lastName: user.name.last });
+    try {
+      const userResponse = await fetch(`/users/${id}`);
+      if (userResponse.status !== 200) {
+        throw new Error(userResponse.statusText);
+      }
+      const user = await userResponse.json();
+      if (user && user.name) {
+        this.setState({ firstName: user.name.first, lastName: user.name.last });
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
