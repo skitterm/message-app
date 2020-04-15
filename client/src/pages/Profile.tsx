@@ -5,7 +5,8 @@ import Title from "../components/Title";
 import TextInput from "../components/TextInput";
 
 interface State {
-  name: string;
+  firstName: string;
+  lastName: string;
 }
 
 class Profile extends Component<{}, State> {
@@ -13,8 +14,20 @@ class Profile extends Component<{}, State> {
     super(props);
 
     this.state = {
-      name: "",
+      firstName: "",
+      lastName: "",
     };
+  }
+
+  async componentDidMount() {
+    const urlParts = window.location.pathname.split("/");
+    const id = urlParts[urlParts.length - 1];
+
+    const userResponse = await fetch(`/users/${id}`);
+    const user = await userResponse.json();
+    if (user && user.name) {
+      this.setState({ firstName: user.name.first, lastName: user.name.last });
+    }
   }
 
   public render() {
@@ -24,9 +37,15 @@ class Profile extends Component<{}, State> {
         <ContentContainer>
           <Title>Profile</Title>
           <TextInput
-            value={this.state.name}
-            placeholder="Your full name"
-            onChange={this.onNameChange}
+            value={this.state.firstName}
+            placeholder="First name"
+            onChange={this.onFirstNameChange}
+            fontSize="18px"
+          />
+          <TextInput
+            value={this.state.lastName}
+            placeholder="Last name"
+            onChange={this.onLastNameChange}
             fontSize="18px"
           />
         </ContentContainer>
@@ -34,9 +53,15 @@ class Profile extends Component<{}, State> {
     );
   }
 
-  private onNameChange = (value: string) => {
+  private onFirstNameChange = (value: string) => {
     this.setState({
-      name: value,
+      firstName: value,
+    });
+  };
+
+  private onLastNameChange = (value: string) => {
+    this.setState({
+      lastName: value,
     });
   };
 }

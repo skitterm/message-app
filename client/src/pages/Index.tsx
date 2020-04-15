@@ -9,6 +9,7 @@ import Tab from "../components/Tab";
 interface State {
   rooms: any[];
   selectedRoomId: string;
+  userId: string;
 }
 
 export interface Props {}
@@ -31,6 +32,7 @@ class Index extends Component<Props, State> {
     this.state = {
       rooms: [],
       selectedRoomId: "",
+      userId: "",
     };
   }
 
@@ -39,13 +41,18 @@ class Index extends Component<Props, State> {
     const roomsJson = await roomsResponse.json();
     if (roomsJson && roomsJson.length > 0) {
       this.setState({ rooms: roomsJson, selectedRoomId: roomsJson[0]._id });
+
+      const userId = roomsJson[0].memberInfo[0]._id;
+      this.setState({
+        userId,
+      });
     }
   }
 
   public render() {
     return (
       <>
-        <Header path="/profile" label="Profile" />
+        <Header path={`/profiles/${this.state.userId}`} label="Profile" />
         <ContentContainer>
           <Title>Messaging App</Title>
           <Content>

@@ -15,6 +15,15 @@ const app = express();
   app.listen(3001, () => {
     console.log("app up and running");
 
+    app.get("/users/:id", async (req, res) => {
+      const usersCollection = db.collection("users");
+      const user = await usersCollection.findOne({
+        _id: ObjectID(req.params.id),
+      });
+
+      res.send(user);
+    });
+
     app.get("/rooms", async (req, res) => {
       const roomsCollection = db.collection("rooms");
       const roomsAugmented = await roomsCollection
