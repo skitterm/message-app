@@ -1,6 +1,7 @@
 const { MongoClient, ObjectID } = require("mongodb");
 const express = require("express");
 require("dotenv").config({ path: "../.env" });
+const UserModel = require("./models/users");
 
 const app = express();
 (async function () {
@@ -13,18 +14,13 @@ const app = express();
   const db = client.db("messageApp");
 
   app.listen(3001, () => {
+    const userModel = new UserModel(db.collection("users"));
+
     console.log("app up and running");
-
     app.get("/users/:id", async (req, res) => {
-      const usersCollection = db.collection("users");
       try {
-        const user = await usersCollection.findOne({
-          _id: ObjectID(req.params.id),
-        });
+        const user = await userModel.getUserById(req.params.id);
 
-        if (!user) {
-          throw new Error("No user found");
-        }
         res.send(user);
       } catch (error) {
         console.log(error);
