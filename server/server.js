@@ -2,6 +2,7 @@ const { MongoClient, ObjectID } = require("mongodb");
 const express = require("express");
 require("dotenv").config({ path: "../.env" });
 const UserModel = require("./models/users");
+const RoomModel = require("./models/rooms");
 
 const app = express();
 (async function () {
@@ -15,11 +16,12 @@ const app = express();
 
   app.listen(3001, () => {
     const userModel = new UserModel(db.collection("users"));
+    const roomModel = new RoomModel(db.collection("rooms"));
 
     console.log("app up and running");
     app.get("/users/:id", async (req, res) => {
       try {
-        const user = await userModel.getUserById(req.params.id);
+        const user = await userModel.getById(req.params.id);
 
         res.send(user);
       } catch (error) {
@@ -29,19 +31,7 @@ const app = express();
     });
 
     app.get("/rooms", async (req, res) => {
-      const roomsCollection = db.collection("rooms");
-      const roomsAugmented = await roomsCollection
-        .aggregate([
-          {
-            $lookup: {
-              from: "users",
-              localField: "members",
-              foreignField: "_id",
-              as: "memberInfo",
-            },
-          },
-        ])
-        .toArray();
+      const roomsAugmented = await roomModel.getAll();
       res.send(roomsAugmented);
     });
 

@@ -5,7 +5,7 @@ module.exports = class UserModel {
     this.collection = collection;
   }
 
-  async getUserById(id) {
+  async getById(id) {
     const user = await this.collection.findOne({
       _id: ObjectID(id),
     });
