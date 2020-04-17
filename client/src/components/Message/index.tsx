@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import variables from "../../styles/variables";
 
 export interface MessageProps {
   name: string;
@@ -27,16 +28,18 @@ const FirstRow = styled.div`
 
 const Name = styled.h4`
   margin: 0 0 4px;
+  font-size: ${variables.fontSize.md};
 `;
 
 const Time = styled.span`
   margin-left: 5px;
   font-style: italic;
-  font-size: 12px;
+  font-size: ${variables.fontSize.sm};
 `;
 
 const Contents = styled.p`
   margin-top: 0;
+  font-size: ${variables.fontSize.md};
 `;
 
 export const Message = (props: MessageProps) => {

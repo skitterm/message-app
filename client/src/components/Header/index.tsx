@@ -14,6 +14,7 @@ const StyledLink = styled(Link)`
   display: block;
   text-align: end;
   text-decoration: none;
+  font-size: ${variables.fontSize.md};
 `;
 
 const HeaderContainer = styled.header`

@@ -1,5 +1,6 @@
 import React, { Component, ChangeEvent } from "react";
 import styled from "styled-components";
+import variables from "../../styles/variables";
 
 export interface Props {
   value: string;
@@ -18,7 +19,7 @@ class TextInput extends Component<Props> {
     return (
       <Input
         type="text"
-        fontSize={this.props.fontSize || "14px"}
+        fontSize={this.props.fontSize || variables.fontSize.md}
         value={this.props.value}
         onChange={this.onChange}
         placeholder={this.props.placeholder}

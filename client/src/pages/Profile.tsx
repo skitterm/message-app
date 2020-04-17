@@ -3,6 +3,7 @@ import ContentContainer from "../components/ContentContainer";
 import Header from "../components/Header";
 import Title from "../components/Title";
 import TextInput from "../components/TextInput";
+import Button from "../components/Button";
 
 interface State {
   firstName: string;
@@ -47,15 +48,13 @@ class Profile extends Component<{}, State> {
             value={this.state.firstName}
             placeholder="First name"
             onChange={this.onFirstNameChange}
-            fontSize="18px"
           />
           <TextInput
             value={this.state.lastName}
             placeholder="Last name"
             onChange={this.onLastNameChange}
-            fontSize="18px"
           />
-          <button onClick={this.onSaveClick}>Save</button>
+          <Button onClick={this.onSaveClick}>Save</Button>
         </ContentContainer>
       </>
     );

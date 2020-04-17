@@ -18,6 +18,7 @@ const Button = styled.button<{ isSelected: boolean }>`
   border-left-color: ${(props) =>
     props.isSelected ? variables.color.accent : "transparent"};
   margin-bottom: 5px;
+  font-size: ${variables.fontSize.sm};
 `;
 
 class Tab extends Component<Props> {
