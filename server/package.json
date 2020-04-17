@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon src/server.js"
+    "start": "tsc-watch --onSuccess \"node built/server.js\" --onFailure \" echo COMPILATION FAILED\""
   },
   "author": "",
   "license": "ISC",
@@ -14,5 +14,8 @@
     "mongodb": "^3.5.5",
     "nodemon": "^2.0.3",
     "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "tsc-watch": "^4.2.3"
   }
 }
