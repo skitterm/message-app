@@ -15,4 +15,15 @@ module.exports = class UserModel {
     }
     return user;
   }
+
+  async updateName(id, firstName, lastName) {
+    await this.collection.updateOne(
+      {
+        _id: ObjectID(id),
+      },
+      {
+        $set: { "name.first": firstName, "name.last": lastName },
+      }
+    );
+  }
 };

@@ -1,4 +1,4 @@
-const { MongoClient, ObjectID } = require("mongodb");
+const { MongoClient } = require("mongodb");
 const express = require("express");
 require("dotenv").config({ path: "../.env" });
 const UserModel = require("./models/users");
@@ -29,6 +29,19 @@ const app = express();
       } catch (error) {
         console.log(error);
         res.status(404).send({ message: "Unable to find a user with that ID" });
+      }
+    });
+
+    app.post("/users/:id", async (req, res) => {
+      try {
+        await userModel.updateName(
+          req.params.id,
+          req.query.firstName,
+          req.query.lastName
+        );
+        res.send();
+      } catch (error) {
+        //
       }
     });
 

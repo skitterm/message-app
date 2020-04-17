@@ -55,6 +55,7 @@ class Profile extends Component<{}, State> {
             onChange={this.onLastNameChange}
             fontSize="18px"
           />
+          <button onClick={this.onSaveClick}>Save</button>
         </ContentContainer>
       </>
     );
@@ -70,6 +71,21 @@ class Profile extends Component<{}, State> {
     this.setState({
       lastName: value,
     });
+  };
+
+  private onSaveClick = async () => {
+    const urlParts = window.location.pathname.split("/");
+    const id = urlParts[urlParts.length - 1];
+
+    const userResponse = await fetch(
+      `/users/${id}?firstName=${this.state.firstName}&lastName=${this.state.lastName}`,
+      {
+        method: "POST",
+      }
+    );
+    if (userResponse.status !== 200) {
+      throw new Error(userResponse.statusText);
+    }
   };
 }
 
