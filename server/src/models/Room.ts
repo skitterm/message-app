@@ -5,7 +5,7 @@ module.exports = class RoomModel extends Model {
     super("rooms");
   }
 
-  async getAll() {
+  public async getAll() {
     const collection = await this.getCollection();
     const allRooms = await collection
       .aggregate([
