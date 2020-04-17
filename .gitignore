@@ -15,7 +15,7 @@ client/node_modules
 
 # production
 /build
-server/build
+server/built
 client/build
 
 # misc
