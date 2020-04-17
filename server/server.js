@@ -1,7 +1,7 @@
 const { MongoClient } = require("mongodb");
 const express = require("express");
 require("dotenv").config({ path: "../.env" });
-const UserModel = require("./models/users");
+const UserModel = require("./models/User");
 const RoomModel = require("./models/rooms");
 const MessageModel = require("./models/messages");
 
@@ -16,7 +16,7 @@ const app = express();
   const db = client.db("messageApp");
 
   app.listen(3001, () => {
-    const userModel = new UserModel(db.collection("users"));
+    const userModel = new UserModel();
     const roomModel = new RoomModel(db.collection("rooms"));
     const messageModel = new MessageModel(db.collection("messages"));
 

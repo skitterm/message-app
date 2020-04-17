@@ -1,12 +1,18 @@
 const { ObjectID } = require("mongodb");
+const DBClient = require("./DBClient");
 
 module.exports = class UserModel {
-  constructor(collection) {
-    this.collection = collection;
+  constructor() {
+    this.db = DBClient.getInstance();
+  }
+
+  async getCollection() {
+    return this.db.getCollection("users");
   }
 
   async getById(id) {
-    const user = await this.collection.findOne({
+    const collection = await this.getCollection();
+    const user = await collection.findOne({
       _id: ObjectID(id),
     });
 
@@ -17,7 +23,8 @@ module.exports = class UserModel {
   }
 
   async updateName(id, firstName, lastName) {
-    await this.collection.updateOne(
+    const collection = await this.getCollection();
+    await collection.updateOne(
       {
         _id: ObjectID(id),
       },
