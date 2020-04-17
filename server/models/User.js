@@ -1,25 +1,10 @@
 const { ObjectID } = require("mongodb");
 const DBClient = require("./DBClient");
+const Model = require("./Model");
 
-module.exports = class UserModel {
+module.exports = class UserModel extends Model {
   constructor() {
-    this.db = DBClient.getInstance();
-  }
-
-  async getCollection() {
-    return this.db.getCollection("users");
-  }
-
-  async getById(id) {
-    const collection = await this.getCollection();
-    const user = await collection.findOne({
-      _id: ObjectID(id),
-    });
-
-    if (!user) {
-      throw new Error("No user found");
-    }
-    return user;
+    super("users");
   }
 
   async updateName(id, firstName, lastName) {
