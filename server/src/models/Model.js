@@ -8,7 +8,6 @@ module.exports = class Model {
   }
 
   async getCollection() {
-    console.log(this.collectionName);
     return this.db.getCollection(this.collectionName);
   }
 
