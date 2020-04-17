@@ -3,6 +3,7 @@ const express = require("express");
 require("dotenv").config({ path: "../.env" });
 const UserModel = require("./models/users");
 const RoomModel = require("./models/rooms");
+const MessageModel = require("./models/messages");
 
 const app = express();
 (async function () {
@@ -17,6 +18,7 @@ const app = express();
   app.listen(3001, () => {
     const userModel = new UserModel(db.collection("users"));
     const roomModel = new RoomModel(db.collection("rooms"));
+    const messageModel = new MessageModel(db.collection("messages"));
 
     console.log("app up and running");
     app.get("/users/:id", async (req, res) => {
@@ -36,15 +38,11 @@ const app = express();
     });
 
     app.get("/rooms/:id/messages", async (req, res) => {
-      const messagesCollection = db.collection("messages");
-      const messages = await messagesCollection
-        .find({ room: ObjectID(req.params.id) })
-        .toArray();
+      const messages = await messageModel.getAllByRoom(req.params.id);
 
       const augmentedItems = await Promise.all(
         messages.map(async (message) => {
-          const usersCollection = db.collection("users");
-          const user = await usersCollection.findOne({ _id: message.sender });
+          const user = await userModel.getById(message.sender);
           return {
             message,
             user,
