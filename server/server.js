@@ -1,24 +1,15 @@
-const { MongoClient } = require("mongodb");
 const express = require("express");
 require("dotenv").config({ path: "../.env" });
 const UserModel = require("./models/User");
-const RoomModel = require("./models/rooms");
-const MessageModel = require("./models/messages");
+const RoomModel = require("./models/Room");
+const MessageModel = require("./models/Message");
 
 const app = express();
 (async function () {
-  const client = new MongoClient(process.env.DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
-  await client.connect();
-  const db = client.db("messageApp");
-
   app.listen(3001, () => {
     const userModel = new UserModel();
-    const roomModel = new RoomModel(db.collection("rooms"));
-    const messageModel = new MessageModel(db.collection("messages"));
+    const roomModel = new RoomModel();
+    const messageModel = new MessageModel();
 
     console.log("app up and running");
     app.get("/users/:id", async (req, res) => {

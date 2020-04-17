@@ -1,10 +1,13 @@
-module.exports = class RoomModel {
-  constructor(collection) {
-    this.collection = collection;
+const Model = require("./Model");
+
+module.exports = class RoomModel extends Model {
+  constructor() {
+    super("rooms");
   }
 
   async getAll() {
-    const allRooms = await this.collection
+    const collection = await this.getCollection();
+    const allRooms = await collection
       .aggregate([
         {
           $lookup: {
