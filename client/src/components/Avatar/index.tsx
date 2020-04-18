@@ -58,19 +58,19 @@ class Avatar extends Component<Props> {
     const parts = shape.split(",");
     const type = this.getValue(parts[0]);
     const color = this.getValue(parts[1]);
-    const largestDimension = this.getValue(parts[2]);
+    const smallestDimension = this.getValue(parts[2]);
     const startX = this.getValue(parts[3]);
     const startY = this.getValue(parts[4]);
     const orientation = this.getValue(parts[5]);
 
     const width =
-      type !== "rt" || orientation === "h"
-        ? largestDimension
-        : `${parseInt(largestDimension.split("%")[0], 10) / 3}%`;
-    const height =
       type !== "rt" || orientation === "v"
-        ? largestDimension
-        : `${parseInt(largestDimension.split("%")[0], 10) / 3}%`;
+        ? smallestDimension
+        : `${parseInt(smallestDimension.split("%")[0], 10) * 3}%`;
+    const height =
+      type !== "rt" || orientation === "h"
+        ? smallestDimension
+        : `${parseInt(smallestDimension.split("%")[0], 10) * 3}%`;
 
     return (
       <Shape

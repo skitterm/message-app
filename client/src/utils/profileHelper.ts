@@ -1,5 +1,5 @@
 export const generateThumbnail = () => {
-  let numberOfShapes = getRandomInteger(5) + 1;
+  let numberOfShapes = getRandomInteger(5, 1);
   let shapes = "";
 
   for (let i = 0; i < numberOfShapes; i++) {
@@ -19,15 +19,18 @@ const generateShape = () => {
   const shape = potentialShapes[getRandomInteger(3)];
   const orientation = potentialOrientations[getRandomInteger(2)];
 
-  return `st=${shape},sbc=${getRandomColor()},sld=${getRandomInteger(
-    70
+  return `st=${shape},sbc=${getRandomColor()},sds=${getRandomInteger(
+    70,
+    20
   )}%,ssx=${getRandomInteger(90)}%,ssy=${getRandomInteger(
     90
   )}%,or=${orientation}`;
 };
 
-const getRandomInteger = (maxNotInclusive: number) => {
-  return Math.floor(Math.random() * maxNotInclusive);
+const getRandomInteger = (maxNotInclusive: number, minInclusive?: number) => {
+  const min = typeof minInclusive === "undefined" ? 0 : minInclusive;
+  const range = maxNotInclusive - min;
+  return Math.floor(min + Math.random() * range);
 };
 
 const getRandomColor = () => {
