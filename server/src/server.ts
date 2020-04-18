@@ -8,6 +8,7 @@ import MessageModel from "./models/Message";
 dotenv.config({ path: "../.env" });
 
 const app = express();
+app.use(express.json());
 (async function () {
   app.listen(3001, () => {
     const userModel = new UserModel();
@@ -26,12 +27,13 @@ const app = express();
       }
     });
 
-    app.post("/users/:id", async (req, res) => {
+    app.put("/users/:id", async (req, res) => {
       try {
-        await userModel.updateName(
+        await userModel.updateById(
           req.params.id,
-          req.query.firstName as string,
-          req.query.lastName as string
+          req.body.firstName as string,
+          req.body.lastName as string,
+          req.body.timeZone as string
         );
         res.send();
       } catch (error) {

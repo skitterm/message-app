@@ -4,10 +4,12 @@ import Header from "../components/Header";
 import Title from "../components/Title";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
+import TimeZoneDropdown from "../components/TimeZoneDropdown";
 
 interface State {
   firstName: string;
   lastName: string;
+  timeZone: string;
 }
 
 class Profile extends Component<{}, State> {
@@ -17,6 +19,7 @@ class Profile extends Component<{}, State> {
     this.state = {
       firstName: "",
       lastName: "",
+      timeZone: "",
     };
   }
 
@@ -30,7 +33,11 @@ class Profile extends Component<{}, State> {
       }
       const user = await userResponse.json();
       if (user && user.name) {
-        this.setState({ firstName: user.name.first, lastName: user.name.last });
+        this.setState({
+          firstName: user.name.first,
+          lastName: user.name.last,
+          timeZone: user.timeZone,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -54,6 +61,10 @@ class Profile extends Component<{}, State> {
             onChange={this.onLastNameChange}
           />
           <Button onClick={this.onSaveClick}>Save</Button>
+          <TimeZoneDropdown
+            onChange={this.onTimeZoneChange}
+            value={this.state.timeZone}
+          />
         </ContentContainer>
       </>
     );
@@ -71,15 +82,27 @@ class Profile extends Component<{}, State> {
     });
   };
 
+  private onTimeZoneChange = (timeZone: string) => {
+    this.setState({
+      timeZone,
+    });
+  };
+
   private onSaveClick = async () => {
     const id = this.getProfileId();
+    const data = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      timeZone: this.state.timeZone,
+    };
 
-    const userResponse = await fetch(
-      `/users/${id}?firstName=${this.state.firstName}&lastName=${this.state.lastName}`,
-      {
-        method: "POST",
-      }
-    );
+    const userResponse = await fetch(`/users/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (userResponse.status !== 200) {
       throw new Error(userResponse.statusText);
     }

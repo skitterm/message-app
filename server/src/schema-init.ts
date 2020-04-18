@@ -1,4 +1,5 @@
-import { MongoClient, ObjectID, Collection } from "mongodb";
+import mongodb, { ObjectID, Collection } from "mongodb";
+const { MongoClient } = mongodb;
 // @ts-ignore
 import dotenv from "dotenv";
 
@@ -42,7 +43,7 @@ const runTheDB = async () => {
         first: "Bob",
         last: "Johnson",
       },
-      timeZone: "pacific",
+      timeZone: "(UTC-07:00) Pacific Time (US & Canada)",
       profileImageUrl: "blue.jpg",
       workingHours: [],
       rooms: [firstRoomItem._id, secondRoomItem._id],
@@ -53,7 +54,7 @@ const runTheDB = async () => {
         first: "Joe",
         last: "West",
       },
-      timeZone: "pacific",
+      timeZone: "(UTC-07:00) Pacific Time (US & Canada)",
       profileImageUrl: "green.jpg",
       workingHours: [],
       rooms: [firstRoomItem._id],
@@ -64,7 +65,7 @@ const runTheDB = async () => {
         first: "Dave",
         last: "Sanchez",
       },
-      timeZone: "eastern",
+      timeZone: "(UTC-05:00) Eastern Time (US & Canada)",
       profileImageUrl: "green.jpg",
       workingHours: [],
       rooms: [secondRoomItem._id],
