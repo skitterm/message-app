@@ -6,7 +6,7 @@ class Model {
   private collectionName: string;
   private db: DBClient;
 
-  constructor(collectionName) {
+  constructor(collectionName: string) {
     this.collectionName = collectionName;
     this.db = DBClient.getInstance();
   }
@@ -15,7 +15,7 @@ class Model {
     return this.db.getCollection(this.collectionName);
   }
 
-  public async getById(id) {
+  public async getById(id: string) {
     const collection = await this.getCollection();
     const item = await collection.findOne({
       _id: new ObjectID(id),

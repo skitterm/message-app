@@ -4,7 +4,8 @@
     "module": "ES2020",
     "allowJs": true,
     "target": "esnext",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "strict": true
   },
   "include": ["src/**/*"]
 }

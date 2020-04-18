@@ -14,13 +14,13 @@ class DBClient {
   private client: MongoClientType;
 
   constructor() {
-    this.client = new MongoClient(process.env.DB_URL, {
+    this.client = new MongoClient(process.env.DB_URL as string, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
   }
 
-  public async getCollection(collection): Promise<Collection> {
+  public async getCollection(collection: string): Promise<Collection> {
     await this.connect();
     const db = this.client.db("messageApp");
     return db.collection(collection);

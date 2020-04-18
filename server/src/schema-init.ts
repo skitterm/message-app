@@ -1,11 +1,11 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectID, Collection } from "mongodb";
 // @ts-ignore
 import dotenv from "dotenv";
 
 dotenv.config({ path: "../.env" });
 
 const runTheDB = async () => {
-  const client = new MongoClient(process.env.DB_URL, {
+  const client = new MongoClient(process.env.DB_URL as string, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
@@ -125,7 +125,7 @@ const runTheDB = async () => {
     someUsers.map(async (user) => {
       // get user
       await Promise.all(
-        user.rooms.map(async (roomId) => {
+        user.rooms.map(async (roomId: ObjectID) => {
           const room = await roomsCollection.findOne({ _id: roomId });
           // put it in rooms.members
           await roomsCollection.updateOne(
@@ -144,13 +144,17 @@ const runTheDB = async () => {
   client.close();
 };
 
-const hydrateCollection = async (collection, items, label) => {
+const hydrateCollection = async (
+  collection: Collection,
+  items: any[],
+  label: string
+) => {
   await collection.insertMany(items);
   const itemsCount = await collection.countDocuments({});
   console.log(`Inserted ${itemsCount} ${label}`);
 };
 
-const showAll = async (collection) => {
+const showAll = async (collection: Collection) => {
   console.log("--------------------------------");
   const items = await collection.find({}).toArray();
   console.log(items);

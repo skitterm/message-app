@@ -7,7 +7,7 @@ class MessageModel extends Model {
     super("messages");
   }
 
-  public async getAllByRoom(roomId) {
+  public async getAllByRoom(roomId: string) {
     const collection = await this.getCollection();
     const messages = await collection
       .find({ room: new ObjectID(roomId) })
