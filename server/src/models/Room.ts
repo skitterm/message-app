@@ -1,3 +1,6 @@
+import mongodb from "mongodb";
+const { ObjectID } = mongodb;
+import { ObjectID as ObjectIDType } from "mongodb";
 import Model from "./Model";
 
 class RoomModel extends Model {
@@ -5,7 +8,7 @@ class RoomModel extends Model {
     super("rooms");
   }
 
-  public async getAll() {
+  public async getAllByUser(userId: string) {
     const collection = await this.getCollection();
     const allRooms = await collection
       .aggregate([
@@ -20,7 +23,18 @@ class RoomModel extends Model {
       ])
       .toArray();
 
-    return allRooms;
+    const userObjectId = new ObjectID(userId);
+    const filteredRooms = allRooms.filter((room) => {
+      let hasMatch = false;
+      room.members.forEach((member: ObjectIDType) => {
+        if (member.equals(userObjectId)) {
+          hasMatch = true;
+        }
+      });
+      return hasMatch;
+    });
+
+    return filteredRooms;
   }
 }
 

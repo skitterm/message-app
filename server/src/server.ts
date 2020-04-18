@@ -16,6 +16,18 @@ app.use(express.json());
     const messageModel = new MessageModel();
 
     console.log("app up and running");
+    app.get("/users/:id/rooms", async (req, res) => {
+      try {
+        const rooms = await roomModel.getAllByUser(req.params.id);
+        res.send(rooms);
+      } catch (error) {
+        console.log(error);
+        res
+          .status(404)
+          .send({ message: "Unable to find rooms for user with that ID" });
+      }
+    });
+
     app.get("/users/:id", async (req, res) => {
       try {
         const user = await userModel.getById(req.params.id);
@@ -51,11 +63,6 @@ app.use(express.json());
         console.log(error);
         res.status(404).send({ message: "Unable to retrieve users" });
       }
-    });
-
-    app.get("/rooms", async (req, res) => {
-      const roomsAugmented = await roomModel.getAll();
-      res.send(roomsAugmented);
     });
 
     app.get("/rooms/:id/messages", async (req, res) => {

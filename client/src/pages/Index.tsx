@@ -35,12 +35,12 @@ class Index extends Component<Props, State> {
   }
 
   async componentDidMount() {
-    const roomsResponse = await fetch("/rooms");
+    const userId = window.localStorage.getItem("userId");
+    const roomsResponse = await fetch(`/users/${userId}/rooms`);
     const roomsJson = await roomsResponse.json();
     if (roomsJson && roomsJson.length > 0) {
       this.setState({ rooms: roomsJson, selectedRoomId: roomsJson[0]._id });
 
-      const userId = window.localStorage.getItem("userId");
       if (userId) {
         this.setState({
           userId,
