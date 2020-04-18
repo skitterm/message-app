@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "./built",
+    "module": "ES2020",
     "allowJs": true,
-    "target": "es6"
+    "target": "esnext",
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["./src/**/*"]
+  "include": ["src/**/*"]
 }

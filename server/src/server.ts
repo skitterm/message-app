@@ -1,8 +1,11 @@
-const express = require("express");
-require("dotenv").config({ path: "../.env" });
-const UserModel = require("./models/User");
-const RoomModel = require("./models/Room");
-const MessageModel = require("./models/Message");
+import express from "express";
+// @ts-ignore
+import dotenv from "dotenv";
+import UserModel from "./models/User";
+import RoomModel from "./models/Room";
+import MessageModel from "./models/Message";
+
+dotenv.config({ path: "../.env" });
 
 const app = express();
 (async function () {
@@ -27,8 +30,8 @@ const app = express();
       try {
         await userModel.updateName(
           req.params.id,
-          req.query.firstName,
-          req.query.lastName
+          req.query.firstName as string,
+          req.query.lastName as string
         );
         res.send();
       } catch (error) {

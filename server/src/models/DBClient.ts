@@ -1,7 +1,7 @@
-import { MongoClient as MongoClientType, Collection } from "mongodb";
-const { MongoClient } = require("mongodb");
+import mongodb, { MongoClient as MongoClientType, Collection } from "mongodb";
+const { MongoClient } = mongodb;
 
-module.exports = class DBClient {
+class DBClient {
   private static instance: DBClient;
 
   public static getInstance(): DBClient {
@@ -31,4 +31,6 @@ module.exports = class DBClient {
       await this.client.connect();
     }
   }
-};
+}
+
+export default DBClient;

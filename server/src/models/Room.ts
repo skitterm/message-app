@@ -1,6 +1,6 @@
-const Model = require("./Model");
+import Model from "./Model";
 
-module.exports = class RoomModel extends Model {
+class RoomModel extends Model {
   constructor() {
     super("rooms");
   }
@@ -22,4 +22,6 @@ module.exports = class RoomModel extends Model {
 
     return allRooms;
   }
-};
+}
+
+export default RoomModel;

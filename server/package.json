@@ -5,16 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc-watch --onSuccess \"node built/server.js\" --onFailure \" echo COMPILATION FAILED\""
+    "start": "tsc-watch --onSuccess \"npx renamer --path-element ext --find \".js\" --replace \".mjs\" built/**/* --force && node --es-module-specifier-resolution=node built/server.mjs\" --onFailure \" echo COMPILATION FAILED\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/express": "^4.17.6",
     "@types/mongodb": "^3.5.8",
     "@types/node": "^13.13.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongodb": "^3.5.5",
     "nodemon": "^2.0.3",
+    "renamer": "^2.0.0",
     "typescript": "^3.8.3"
   },
   "devDependencies": {

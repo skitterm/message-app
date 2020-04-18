@@ -1,20 +1,24 @@
-const { ObjectID } = require("mongodb");
-const DBClient = require("./DBClient");
+import mongodb from "mongodb";
+const { ObjectID } = mongodb;
+import DBClient from "./DBClient";
 
-module.exports = class Model {
+class Model {
+  private collectionName: string;
+  private db: DBClient;
+
   constructor(collectionName) {
     this.collectionName = collectionName;
     this.db = DBClient.getInstance();
   }
 
-  async getCollection() {
+  public async getCollection() {
     return this.db.getCollection(this.collectionName);
   }
 
-  async getById(id) {
+  public async getById(id) {
     const collection = await this.getCollection();
     const item = await collection.findOne({
-      _id: ObjectID(id),
+      _id: new ObjectID(id),
     });
 
     if (!item) {
@@ -22,4 +26,6 @@ module.exports = class Model {
     }
     return item;
   }
-};
+}
+
+export default Model;

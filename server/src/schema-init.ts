@@ -1,10 +1,13 @@
-const { MongoClient } = require("mongodb");
-require("dotenv").config({ path: "../.env" });
+import { MongoClient } from "mongodb";
+// @ts-ignore
+import dotenv from "dotenv";
+
+dotenv.config({ path: "../.env" });
 
 const runTheDB = async () => {
   const client = new MongoClient(process.env.DB_URL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   });
 
   await client.connect();
@@ -21,12 +24,12 @@ const runTheDB = async () => {
   const roomItems = [
     {
       members: [],
-      messages: []
+      messages: [],
     },
     {
       members: [],
-      messages: []
-    }
+      messages: [],
+    },
   ];
 
   await hydrateCollection(roomsCollection, roomItems, "rooms");
@@ -37,36 +40,36 @@ const runTheDB = async () => {
     {
       name: {
         first: "Bob",
-        last: "Johnson"
+        last: "Johnson",
       },
       timeZone: "pacific",
       profileImageUrl: "blue.jpg",
       workingHours: [],
       rooms: [firstRoomItem._id, secondRoomItem._id],
-      unreadMessages: []
+      unreadMessages: [],
     },
     {
       name: {
         first: "Joe",
-        last: "West"
+        last: "West",
       },
       timeZone: "pacific",
       profileImageUrl: "green.jpg",
       workingHours: [],
       rooms: [firstRoomItem._id],
-      unreadMessages: []
+      unreadMessages: [],
     },
     {
       name: {
         first: "Dave",
-        last: "Sanchez"
+        last: "Sanchez",
       },
       timeZone: "eastern",
       profileImageUrl: "green.jpg",
       workingHours: [],
       rooms: [secondRoomItem._id],
-      unreadMessages: []
-    }
+      unreadMessages: [],
+    },
   ];
 
   await hydrateCollection(usersCollection, userItems, "users");
@@ -80,33 +83,33 @@ const runTheDB = async () => {
       sender: userOne._id,
       timeSent: 1585423791755,
       contents: "Hey Joe, this is Bob",
-      room: firstRoomItem._id
+      room: firstRoomItem._id,
     },
     {
       sender: userTwo._id,
       timeSent: 1585623791755,
       contents: "Hey Bob, this is Joe",
-      room: firstRoomItem._id
+      room: firstRoomItem._id,
     },
     {
       sender: userOne._id,
       timeSent: 1585423791755,
       contents: "Hey Dave, this is Bob",
-      room: secondRoomItem._id
+      room: secondRoomItem._id,
     },
     {
       sender: userThree._id,
       timeSent: 1585623791755,
       contents: "Hey Bob, this is Dave",
-      room: secondRoomItem._id
-    }
+      room: secondRoomItem._id,
+    },
   ];
 
   await hydrateCollection(messagesCollection, messageItems, "messages");
 
   const someMessages = await messagesCollection.find({}).toArray();
   await Promise.all(
-    someMessages.map(async item => {
+    someMessages.map(async (item) => {
       // get room
       const room = await roomsCollection.findOne({ _id: item.room });
       // put it in messages
@@ -119,10 +122,10 @@ const runTheDB = async () => {
 
   const someUsers = await usersCollection.find({}).toArray();
   await Promise.all(
-    someUsers.map(async user => {
+    someUsers.map(async (user) => {
       // get user
       await Promise.all(
-        user.rooms.map(async roomId => {
+        user.rooms.map(async (roomId) => {
           const room = await roomsCollection.findOne({ _id: roomId });
           // put it in rooms.members
           await roomsCollection.updateOne(
@@ -147,7 +150,7 @@ const hydrateCollection = async (collection, items, label) => {
   console.log(`Inserted ${itemsCount} ${label}`);
 };
 
-const showAll = async collection => {
+const showAll = async (collection) => {
   console.log("--------------------------------");
   const items = await collection.find({}).toArray();
   console.log(items);

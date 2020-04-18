@@ -1,27 +1,27 @@
-import { ObjectID as ObjectIDType } from "mongodb";
+import mongodb from "mongodb";
+const { ObjectID } = mongodb;
+import Model from "./Model";
 
-const { ObjectID } = require("mongodb");
-const DBClient = require("./DBClient");
-const Model = require("./Model");
-
-module.exports = class UserModel extends Model {
+class UserModel extends Model {
   constructor() {
     super("users");
   }
 
   public async updateName(
-    id: ObjectIDType,
+    id: string,
     firstName: string,
     lastName: string
   ): Promise<void> {
     const collection = await this.getCollection();
     await collection.updateOne(
       {
-        _id: ObjectID(id),
+        _id: new ObjectID(id),
       },
       {
         $set: { "name.first": firstName, "name.last": lastName },
       }
     );
   }
-};
+}
+
+export default UserModel;
