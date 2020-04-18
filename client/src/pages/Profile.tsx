@@ -6,6 +6,7 @@ import Title from "../components/Title";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
 import TimeZoneDropdown from "../components/TimeZoneDropdown";
+import Avatar from "../components/Avatar";
 import variables from "../styles/variables";
 
 interface State {
@@ -24,12 +25,17 @@ const StyledForm = styled.div`
   grid-auto-rows: auto;
   grid-row-gap: 32px;
   max-width: 400px;
+  margin-bottom: 32px;
 `;
 
 const StyledButtonContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 12px;
+`;
+
+const Spacer = styled.div`
+  margin-bottom: 12px;
 `;
 
 class Profile extends Component<{}, State> {
@@ -71,6 +77,14 @@ class Profile extends Component<{}, State> {
         <ContentContainer>
           <Title>Profile</Title>
           <StyledForm>
+            <label>
+              <StyledLabelTitle>Profile picture</StyledLabelTitle>
+              <Avatar size="large" />
+              <Spacer />
+              <Button onClick={this.onSwitchPictureClick}>
+                Switch picture
+              </Button>
+            </label>
             <label>
               <StyledLabelTitle>First name</StyledLabelTitle>
               <TextInput
@@ -123,6 +137,8 @@ class Profile extends Component<{}, State> {
       timeZone,
     });
   };
+
+  private onSwitchPictureClick = () => {};
 
   private onSaveClick = async () => {
     const id = this.getProfileId();

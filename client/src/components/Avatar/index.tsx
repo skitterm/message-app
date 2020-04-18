@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import { generateThumbnail } from "../../utils/profileHelper";
 
-const Background = styled.div<{ color: string }>`
-  width: 50px;
-  height: 50px;
+const Background = styled.div<{ color: string; size?: string }>`
+  width: ${(props) => (props.size === "large" ? "100px" : "50px")};
+  height: ${(props) => (props.size === "large" ? "100px" : "50px")};
   position: relative;
   overflow: hidden;
   background-color: ${(props) => props.color};
@@ -28,14 +29,16 @@ const Shape = styled.div<{
 
 interface Props {
   // thumbnail?: string;
+  size?: "small" | "large";
 }
 
 class Avatar extends Component<Props> {
+  public static defaultProps: Partial<Props> = {
+    size: "small",
+  };
+
   public render() {
-    const thumbnail =
-      "bc=#00FF00;st=sq,sbc=#FF0000,sld=30%,ssx=10%,ssy=10%,or=v;" +
-      "st=rt,sbc=#0F0000,sld=60%,ssx=30%,ssy=60%,or=h;" +
-      "st=cr,sbc=#0000FF,sld=30%,ssx=70%,ssy=20%,or=h";
+    const thumbnail = generateThumbnail();
 
     const parts = thumbnail.split(";");
     const backgroundColor = this.getValue(parts[0]);
@@ -43,7 +46,7 @@ class Avatar extends Component<Props> {
     const shapes = parts.slice(1);
 
     return (
-      <Background color={backgroundColor}>
+      <Background color={backgroundColor} size={this.props.size}>
         {shapes.map((shape) => {
           return this.renderShape(shape);
         })}
