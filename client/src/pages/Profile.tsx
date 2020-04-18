@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import ContentContainer from "../components/ContentContainer";
-import Header from "../components/Header";
-import Title from "../components/Title";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
 import TimeZoneDropdown from "../components/TimeZoneDropdown";
 import Avatar from "../components/Avatar";
 import variables from "../styles/variables";
 import { generateThumbnail } from "../utils/profileHelper";
+import PageWrapper from "./PageWrapper";
 
 interface State {
   firstName: string;
@@ -77,51 +75,45 @@ class Profile extends Component<{}, State> {
 
   public render() {
     return (
-      <>
-        <Header path="/" label="Home" />
-        <ContentContainer>
-          <Title>Profile</Title>
-          <StyledForm>
-            <label>
-              <StyledLabelTitle>Profile picture</StyledLabelTitle>
-              <Avatar size="large" thumbnail={this.state.thumbnail} />
-              <Spacer />
-              <Button onClick={this.onSwitchPictureClick}>
-                Switch picture
-              </Button>
-            </label>
-            <label>
-              <StyledLabelTitle>First name</StyledLabelTitle>
-              <TextInput
-                value={this.state.firstName}
-                placeholder="First name"
-                onChange={this.onFirstNameChange}
-              />
-            </label>
-            <label>
-              <StyledLabelTitle>Last name</StyledLabelTitle>
-              <TextInput
-                value={this.state.lastName}
-                placeholder="Last name"
-                onChange={this.onLastNameChange}
-              />
-            </label>
-            <label>
-              <StyledLabelTitle>Time zone</StyledLabelTitle>
-              <TimeZoneDropdown
-                onChange={this.onTimeZoneChange}
-                value={this.state.timeZone}
-              />
-            </label>
-            <StyledButtonContainer>
-              <Button onClick={this.onCancelClick} mode="clear">
-                Cancel
-              </Button>
-              <Button onClick={this.onSaveClick}>Save</Button>
-            </StyledButtonContainer>
-          </StyledForm>
-        </ContentContainer>
-      </>
+      <PageWrapper title="Profile">
+        <StyledForm>
+          <label>
+            <StyledLabelTitle>Profile picture</StyledLabelTitle>
+            <Avatar size="large" thumbnail={this.state.thumbnail} />
+            <Spacer />
+            <Button onClick={this.onSwitchPictureClick}>Switch picture</Button>
+          </label>
+          <label>
+            <StyledLabelTitle>First name</StyledLabelTitle>
+            <TextInput
+              value={this.state.firstName}
+              placeholder="First name"
+              onChange={this.onFirstNameChange}
+            />
+          </label>
+          <label>
+            <StyledLabelTitle>Last name</StyledLabelTitle>
+            <TextInput
+              value={this.state.lastName}
+              placeholder="Last name"
+              onChange={this.onLastNameChange}
+            />
+          </label>
+          <label>
+            <StyledLabelTitle>Time zone</StyledLabelTitle>
+            <TimeZoneDropdown
+              onChange={this.onTimeZoneChange}
+              value={this.state.timeZone}
+            />
+          </label>
+          <StyledButtonContainer>
+            <Button onClick={this.onCancelClick} mode="clear">
+              Cancel
+            </Button>
+            <Button onClick={this.onSaveClick}>Save</Button>
+          </StyledButtonContainer>
+        </StyledForm>
+      </PageWrapper>
     );
   }
 

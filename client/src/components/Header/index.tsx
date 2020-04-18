@@ -5,13 +5,16 @@ import styled from "styled-components";
 import ContentContainer from "../ContentContainer";
 import variables from "../../styles/variables";
 
-interface Props {
+interface HeaderLink {
   path: string;
   label: string;
 }
 
+interface Props {
+  links: HeaderLink[];
+}
+
 const StyledLink = styled(Link)`
-  display: block;
   text-align: end;
   text-decoration: none;
   font-size: ${variables.fontSize.md};
@@ -22,6 +25,14 @@ const HeaderContainer = styled.header`
   border-bottom: 2px solid ${variables.color.offWhite};
 `;
 
+const EndAligner = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: 1fr;
+  justify-content: end;
+  grid-column-gap: 60px;
+`;
+
 class Header extends Component<Props> {
   public render() {
     return (
@@ -29,8 +40,12 @@ class Header extends Component<Props> {
         <ContentContainer>
           <Container>
             <Row justify="end">
-              <Col sm={4}>
-                <StyledLink to={this.props.path}>{this.props.label}</StyledLink>
+              <Col sm={12}>
+                <EndAligner>
+                  {this.props.links.map((link: HeaderLink) => {
+                    return <StyledLink to={link.path}>{link.label}</StyledLink>;
+                  })}
+                </EndAligner>
               </Col>
             </Row>
           </Container>
