@@ -43,7 +43,11 @@ class Header extends Component<Props> {
               <Col sm={12}>
                 <EndAligner>
                   {this.props.links.map((link: HeaderLink) => {
-                    return <StyledLink to={link.path}>{link.label}</StyledLink>;
+                    return (
+                      <StyledLink key={link.path} to={link.path}>
+                        {link.label}
+                      </StyledLink>
+                    );
                   })}
                 </EndAligner>
               </Col>

@@ -61,10 +61,12 @@ class SwitchUser extends Component<{}, State> {
             const name = `${user.name.first} ${user.name.last}`;
 
             return (
-              <Item>
+              <Item key={user._id}>
                 <Avatar size="large" thumbnail={user.thumbnail} />
                 <StyledName>{name}</StyledName>
-                <Button>Select</Button>
+                <Button onClick={this.onUserClick.bind(this, user._id)}>
+                  Select
+                </Button>
               </Item>
             );
           })}
@@ -72,6 +74,13 @@ class SwitchUser extends Component<{}, State> {
       </PageWrapper>
     );
   }
+
+  private onUserClick = (userId: string) => {
+    window.localStorage.setItem("userId", userId);
+
+    const url = new URL(window.location.href);
+    window.location.href = url.origin;
+  };
 }
 
 export default SwitchUser;
