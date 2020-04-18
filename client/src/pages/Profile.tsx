@@ -20,9 +20,8 @@ class Profile extends Component<{}, State> {
     };
   }
 
-  async componentDidMount() {
-    const urlParts = window.location.pathname.split("/");
-    const id = urlParts[urlParts.length - 1];
+  public async componentDidMount() {
+    const id = this.getProfileId();
 
     try {
       const userResponse = await fetch(`/users/${id}`);
@@ -73,8 +72,7 @@ class Profile extends Component<{}, State> {
   };
 
   private onSaveClick = async () => {
-    const urlParts = window.location.pathname.split("/");
-    const id = urlParts[urlParts.length - 1];
+    const id = this.getProfileId();
 
     const userResponse = await fetch(
       `/users/${id}?firstName=${this.state.firstName}&lastName=${this.state.lastName}`,
@@ -85,6 +83,11 @@ class Profile extends Component<{}, State> {
     if (userResponse.status !== 200) {
       throw new Error(userResponse.statusText);
     }
+  };
+
+  private getProfileId = (): string => {
+    const urlParts = window.location.pathname.split("/");
+    return urlParts[urlParts.length - 1];
   };
 }
 
