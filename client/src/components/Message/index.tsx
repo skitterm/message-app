@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Avatar from "../Avatar";
 import variables from "../../styles/variables";
 
 export interface MessageProps {
@@ -10,8 +11,9 @@ export interface MessageProps {
 }
 
 const Container = styled.li`
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-column-gap: 12px;
   margin-bottom: 20px;
 `;
 
@@ -53,10 +55,7 @@ export const Message = (props: MessageProps) => {
 
   return (
     <Container>
-      <Thumbnail
-        src={`/temp_images/${props.thumbnail}`}
-        alt={`Thumbnail for ${props.name}`}
-      />
+      <Avatar />
       <div>
         <FirstRow>
           <Name>{props.name}</Name>
