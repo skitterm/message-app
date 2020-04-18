@@ -1,4 +1,4 @@
-import mongodb from "mongodb";
+import mongodb, { ObjectId } from "mongodb";
 const { ObjectID } = mongodb;
 import Model from "./Model";
 
@@ -14,6 +14,18 @@ class MessageModel extends Model {
       .toArray();
 
     return messages;
+  }
+
+  public async addItem(senderId: string, roomId: string, contents: string) {
+    const collection = await this.getCollection();
+    const result = await collection.insertOne({
+      sender: new ObjectID(senderId),
+      timeSent: Date.now(),
+      contents,
+      room: new ObjectID(roomId),
+    });
+
+    return result.insertedId;
   }
 }
 

@@ -36,6 +36,18 @@ class RoomModel extends Model {
 
     return filteredRooms;
   }
+
+  public async addMessage(roomId: string, messageId: string) {
+    const collection = await this.getCollection();
+    await collection.updateOne(
+      {
+        _id: new ObjectID(roomId),
+      },
+      {
+        $push: { messages: messageId },
+      }
+    );
+  }
 }
 
 export default RoomModel;

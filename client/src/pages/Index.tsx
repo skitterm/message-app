@@ -36,6 +36,7 @@ class Index extends Component<Props, State> {
 
   async componentDidMount() {
     const userId = window.localStorage.getItem("userId");
+
     const roomsResponse = await fetch(`/users/${userId}/rooms`);
     const roomsJson = await roomsResponse.json();
     if (roomsJson && roomsJson.length > 0) {
@@ -70,7 +71,10 @@ class Index extends Component<Props, State> {
             })}
           </List>
           {this.state.selectedRoomId && (
-            <MainTabPanel roomId={this.state.selectedRoomId} />
+            <MainTabPanel
+              roomId={this.state.selectedRoomId}
+              userId={window.localStorage.getItem("userId") || ""}
+            />
           )}
         </Content>
       </PageWrapper>

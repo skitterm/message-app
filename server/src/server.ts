@@ -80,5 +80,18 @@ app.use(express.json());
 
       res.send(augmentedItems);
     });
+
+    app.post("/messages", async (req, res) => {
+      const addedMessageId = await messageModel.addItem(
+        req.body.sender as string,
+        req.body.roomId as string,
+        req.body.contents as string
+      );
+
+      // add to rooms as well
+      await roomModel.addMessage(req.body.roomId, addedMessageId);
+
+      res.send();
+    });
   });
 })();
