@@ -43,7 +43,7 @@ class MainTabPanel extends Component<Props, State> {
               key={message.message._id}
               name={fullName}
               time={message.message.timeSent}
-              thumbnail={message.user.profileImageUrl}
+              thumbnail={message.user.thumbnail}
               contents={message.message.contents}
             />
           );

@@ -8,11 +8,13 @@ import Button from "../components/Button";
 import TimeZoneDropdown from "../components/TimeZoneDropdown";
 import Avatar from "../components/Avatar";
 import variables from "../styles/variables";
+import { generateThumbnail } from "../utils/profileHelper";
 
 interface State {
   firstName: string;
   lastName: string;
   timeZone: string;
+  thumbnail: string;
 }
 
 const StyledLabelTitle = styled.h4`
@@ -46,6 +48,7 @@ class Profile extends Component<{}, State> {
       firstName: "",
       lastName: "",
       timeZone: "",
+      thumbnail: "",
     };
   }
 
@@ -58,11 +61,13 @@ class Profile extends Component<{}, State> {
         throw new Error(userResponse.statusText);
       }
       const user = await userResponse.json();
+
       if (user && user.name) {
         this.setState({
           firstName: user.name.first,
           lastName: user.name.last,
           timeZone: user.timeZone,
+          thumbnail: user.thumbnail,
         });
       }
     } catch (error) {
@@ -79,7 +84,7 @@ class Profile extends Component<{}, State> {
           <StyledForm>
             <label>
               <StyledLabelTitle>Profile picture</StyledLabelTitle>
-              <Avatar size="large" />
+              <Avatar size="large" thumbnail={this.state.thumbnail} />
               <Spacer />
               <Button onClick={this.onSwitchPictureClick}>
                 Switch picture
@@ -138,7 +143,11 @@ class Profile extends Component<{}, State> {
     });
   };
 
-  private onSwitchPictureClick = () => {};
+  private onSwitchPictureClick = () => {
+    this.setState({
+      thumbnail: generateThumbnail(),
+    });
+  };
 
   private onSaveClick = async () => {
     const id = this.getProfileId();
@@ -146,6 +155,7 @@ class Profile extends Component<{}, State> {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       timeZone: this.state.timeZone,
+      thumbnail: this.state.thumbnail,
     };
 
     const userResponse = await fetch(`/users/${id}`, {

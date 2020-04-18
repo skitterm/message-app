@@ -11,7 +11,8 @@ class UserModel extends Model {
     id: string,
     firstName: string,
     lastName: string,
-    timeZone: string
+    timeZone: string,
+    thumbnail: string
   ): Promise<void> {
     const collection = await this.getCollection();
     await collection.updateOne(
@@ -19,7 +20,12 @@ class UserModel extends Model {
         _id: new ObjectID(id),
       },
       {
-        $set: { "name.first": firstName, "name.last": lastName, timeZone },
+        $set: {
+          "name.first": firstName,
+          "name.last": lastName,
+          timeZone,
+          thumbnail,
+        },
       }
     );
   }

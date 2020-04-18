@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { generateThumbnail } from "../../utils/profileHelper";
 
 const Background = styled.div<{ color: string; size?: string }>`
   width: ${(props) => (props.size === "large" ? "100px" : "50px")};
@@ -28,7 +27,7 @@ const Shape = styled.div<{
 `;
 
 interface Props {
-  // thumbnail?: string;
+  thumbnail: string;
   size?: "small" | "large";
 }
 
@@ -38,23 +37,25 @@ class Avatar extends Component<Props> {
   };
 
   public render() {
-    const thumbnail = generateThumbnail();
+    if (!this.props.thumbnail) {
+      return null;
+    }
 
-    const parts = thumbnail.split(";");
+    const parts = this.props.thumbnail.split(";");
     const backgroundColor = this.getValue(parts[0]);
 
     const shapes = parts.slice(1);
 
     return (
       <Background color={backgroundColor} size={this.props.size}>
-        {shapes.map((shape) => {
-          return this.renderShape(shape);
+        {shapes.map((shape, index) => {
+          return this.renderShape(shape, index);
         })}
       </Background>
     );
   }
 
-  private renderShape = (shape: string) => {
+  private renderShape = (shape: string, index: number) => {
     const parts = shape.split(",");
     const type = this.getValue(parts[0]);
     const color = this.getValue(parts[1]);
@@ -74,6 +75,7 @@ class Avatar extends Component<Props> {
 
     return (
       <Shape
+        key={index}
         color={color}
         startX={startX}
         startY={startY}

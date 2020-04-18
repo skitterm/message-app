@@ -33,7 +33,8 @@ app.use(express.json());
           req.params.id,
           req.body.firstName as string,
           req.body.lastName as string,
-          req.body.timeZone as string
+          req.body.timeZone as string,
+          req.body.thumbnail as string
         );
         res.send();
       } catch (error) {

@@ -44,7 +44,8 @@ const runTheDB = async () => {
         last: "Johnson",
       },
       timeZone: "(UTC-07:00) Pacific Time (US & Canada)",
-      profileImageUrl: "blue.jpg",
+      thumbnail:
+        "bc=#CBF13C;st=sq,sbc=#D061B2,sds=56%,ssx=66%,ssy=2%,or=h;st=sq,sbc=#5135F2,sds=35%,ssx=83%,ssy=33%,or=v;st=rt,sbc=#088395,sds=31%,ssx=17%,ssy=40%,or=h",
       workingHours: [],
       rooms: [firstRoomItem._id, secondRoomItem._id],
       unreadMessages: [],
@@ -55,7 +56,7 @@ const runTheDB = async () => {
         last: "West",
       },
       timeZone: "(UTC-07:00) Pacific Time (US & Canada)",
-      profileImageUrl: "green.jpg",
+      thumbnail: "bc=#F9A37D;st=cr,sbc=#2D4CFC,sds=37%,ssx=26%,ssy=42%,or=h",
       workingHours: [],
       rooms: [firstRoomItem._id],
       unreadMessages: [],
@@ -66,7 +67,8 @@ const runTheDB = async () => {
         last: "Sanchez",
       },
       timeZone: "(UTC-05:00) Eastern Time (US & Canada)",
-      profileImageUrl: "green.jpg",
+      thumbnail:
+        "bc=#26D516;st=rt,sbc=#3077D8,sds=43%,ssx=22%,ssy=8%,or=h;st=rt,sbc=#3C6122,sds=60%,ssx=17%,ssy=0%,or=h;st=rt,sbc=#AB988E,sds=27%,ssx=5%,ssy=19%,or=v;st=cr,sbc=#A1BEFA,sds=51%,ssx=73%,ssy=44%,or=h",
       workingHours: [],
       rooms: [secondRoomItem._id],
       unreadMessages: [],

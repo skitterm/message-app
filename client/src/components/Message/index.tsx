@@ -17,12 +17,6 @@ const Container = styled.li`
   margin-bottom: 20px;
 `;
 
-const Thumbnail = styled.img`
-  width: 50px;
-  height: auto;
-  padding-right: 10px;
-`;
-
 const FirstRow = styled.div`
   display: flex;
   align-items: center;
@@ -55,7 +49,7 @@ export const Message = (props: MessageProps) => {
 
   return (
     <Container>
-      <Avatar />
+      <Avatar thumbnail={props.thumbnail} />
       <div>
         <FirstRow>
           <Name>{props.name}</Name>
