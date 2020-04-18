@@ -2,14 +2,17 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import variables from "../../styles/variables";
 
-const StyledButton = styled.button`
-  background-color: ${variables.color.accent};
-  color: white;
+const StyledButton = styled.button<Props>`
+  background-color: ${(props) =>
+    props.mode === "clear" ? "transparent" : variables.color.accent};
+  color: ${(props) =>
+    props.mode === "clear" ? variables.color.danger : variables.color.white};
   font-size: ${variables.fontSize.md};
   padding: 0.5em 1em;
   box-shadow: 0px 0px 3px 1px #888;
   border-radius: 2px;
-  border: none;
+  border: ${(props) =>
+    props.mode === "clear" ? `2px solid ${variables.color.danger}` : "none"};
   cursor: pointer;
 
   &:active {
@@ -25,15 +28,21 @@ const StyledButton = styled.button`
 
 interface Props {
   onClick: () => void;
+  mode?: "default" | "clear";
   isDisabled?: boolean;
 }
 
 class Button extends Component<Props> {
+  public static defaultProps: Partial<Props> = {
+    mode: "default",
+  };
+
   public render() {
     return (
       <StyledButton
         onClick={this.props.onClick}
         disabled={this.props.isDisabled}
+        mode={this.props.mode}
       >
         {this.props.children}
       </StyledButton>
