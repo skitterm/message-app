@@ -42,6 +42,17 @@ app.use(express.json());
       }
     });
 
+    app.get("/users", async (req, res) => {
+      try {
+        const users = await userModel.getAll();
+
+        res.send(users);
+      } catch (error) {
+        console.log(error);
+        res.status(404).send({ message: "Unable to retrieve users" });
+      }
+    });
+
     app.get("/rooms", async (req, res) => {
       const roomsAugmented = await roomModel.getAll();
       res.send(roomsAugmented);

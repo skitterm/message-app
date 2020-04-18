@@ -29,6 +29,13 @@ class UserModel extends Model {
       }
     );
   }
+
+  public async getAll() {
+    const collection = await this.getCollection();
+    const allUsers = await collection.find({}).toArray();
+
+    return allUsers;
+  }
 }
 
 export default UserModel;
