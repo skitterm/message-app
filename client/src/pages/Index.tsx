@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import { getUserId } from "../utils/userHelper";
 import MainTabPanel from "../components/MainTabPanel";
 import Tab from "../components/Tab";
 import PageWrapper from "./PageWrapper";
@@ -35,7 +36,7 @@ class Index extends Component<Props, State> {
   }
 
   async componentDidMount() {
-    const userId = window.localStorage.getItem("userId");
+    const userId = getUserId();
 
     const roomsResponse = await fetch(`/users/${userId}/rooms`);
     const roomsJson = await roomsResponse.json();
@@ -73,7 +74,7 @@ class Index extends Component<Props, State> {
           {this.state.selectedRoomId && (
             <MainTabPanel
               roomId={this.state.selectedRoomId}
-              userId={window.localStorage.getItem("userId") || ""}
+              userId={getUserId()}
             />
           )}
         </Content>

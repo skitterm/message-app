@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import { setUserId } from "../utils/userHelper";
 import Button from "../components/Button";
 import Avatar from "../components/Avatar";
 import variables from "../styles/variables";
@@ -76,7 +77,7 @@ class SwitchUser extends Component<{}, State> {
   }
 
   private onUserClick = (userId: string) => {
-    window.localStorage.setItem("userId", userId);
+    setUserId(userId);
 
     const url = new URL(window.location.href);
     window.location.href = url.origin;

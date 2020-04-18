@@ -69,16 +69,6 @@ class Profile extends Component<{}, State> {
         });
       }
     } catch (error) {
-      // if there is no user, put one in localstorage
-      const userResponse = await fetch(`/users`);
-      if (userResponse.status !== 200) {
-        throw new Error(userResponse.statusText);
-      }
-      const users = await userResponse.json();
-      if (users && users.length > 0) {
-        window.localStorage.setItem("userId", users[0]._id);
-      }
-
       console.log(error);
     }
   }

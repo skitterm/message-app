@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { getUserId } from "../utils/userHelper";
 import Header from "../components/Header";
 import ContentContainer from "../components/ContentContainer";
 import Title from "../components/Title";
@@ -18,7 +19,7 @@ class PageWrapper extends Component<Props> {
               label: "Home",
             },
             {
-              path: `/profiles/${window.localStorage.getItem("userId") || ""}`,
+              path: `/profiles/${getUserId()}`,
               label: "Profile",
             },
             {
