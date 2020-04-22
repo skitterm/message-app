@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { getUserId } from "../utils/userHelper";
+import { injectUserContext, UserContextProps } from "../context/UserContext";
 import MainTabPanel from "../components/MainTabPanel";
 import Tab from "../components/Tab";
 import PageWrapper from "./PageWrapper";
@@ -8,10 +8,9 @@ import PageWrapper from "./PageWrapper";
 interface State {
   rooms: any[];
   selectedRoomId: string;
-  userId: string;
 }
 
-export interface Props {}
+export interface Props extends UserContextProps {}
 const Content = styled.div`
   display: flex;
 `;
@@ -31,23 +30,16 @@ class Index extends Component<Props, State> {
     this.state = {
       rooms: [],
       selectedRoomId: "",
-      userId: "",
     };
   }
 
   async componentDidMount() {
-    const userId = getUserId();
+    await this.fetchRooms();
+  }
 
-    const roomsResponse = await fetch(`/users/${userId}/rooms`);
-    const roomsJson = await roomsResponse.json();
-    if (roomsJson && roomsJson.length > 0) {
-      this.setState({ rooms: roomsJson, selectedRoomId: roomsJson[0]._id });
-
-      if (userId) {
-        this.setState({
-          userId,
-        });
-      }
+  async componentDidUpdate(prevProps: Props) {
+    if (prevProps.userId !== this.props.userId) {
+      await this.fetchRooms();
     }
   }
 
@@ -74,7 +66,7 @@ class Index extends Component<Props, State> {
           {this.state.selectedRoomId && (
             <MainTabPanel
               roomId={this.state.selectedRoomId}
-              userId={getUserId()}
+              userId={this.props.userId}
             />
           )}
         </Content>
@@ -87,6 +79,15 @@ class Index extends Component<Props, State> {
       selectedRoomId: roomId,
     });
   };
+
+  private fetchRooms = async () => {
+    const userId = this.props.userId;
+    const roomsResponse = await fetch(`/users/${userId}/rooms`);
+    const roomsJson = await roomsResponse.json();
+    if (roomsJson && roomsJson.length > 0) {
+      this.setState({ rooms: roomsJson, selectedRoomId: roomsJson[0]._id });
+    }
+  };
 }
 
-export default Index;
+export default injectUserContext(Index);

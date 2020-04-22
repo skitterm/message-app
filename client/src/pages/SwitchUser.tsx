@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { setUserId } from "../utils/userHelper";
+import { UserContextProps, injectUserContext } from "../context/UserContext";
 import Button from "../components/Button";
 import Avatar from "../components/Avatar";
 import variables from "../styles/variables";
@@ -27,8 +27,10 @@ interface State {
   users: any[];
 }
 
-class SwitchUser extends Component<{}, State> {
-  constructor(props: {}) {
+interface Props extends UserContextProps {}
+
+class SwitchUser extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -77,11 +79,11 @@ class SwitchUser extends Component<{}, State> {
   }
 
   private onUserClick = (userId: string) => {
-    setUserId(userId);
+    this.props.updateUserId(userId);
 
     const url = new URL(window.location.href);
     window.location.href = url.origin;
   };
 }
 
-export default SwitchUser;
+export default injectUserContext(SwitchUser);

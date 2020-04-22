@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { getUserId } from "../utils/userHelper";
+import { injectUserContext, UserContextProps } from "../context/UserContext";
 import Header from "../components/Header";
 import ContentContainer from "../components/ContentContainer";
 import Title from "../components/Title";
 
-interface Props {
+interface Props extends UserContextProps {
   title: string;
 }
 
@@ -19,7 +19,7 @@ class PageWrapper extends Component<Props> {
               label: "Home",
             },
             {
-              path: `/profiles/${getUserId()}`,
+              path: `/profiles/${this.props.userId}`,
               label: "Profile",
             },
             {
@@ -37,4 +37,4 @@ class PageWrapper extends Component<Props> {
   }
 }
 
-export default PageWrapper;
+export default injectUserContext(PageWrapper);
