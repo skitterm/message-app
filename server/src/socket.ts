@@ -13,18 +13,18 @@ class Socket {
       webSocket.on("message", (message) => {
         this.receiveMessage(message);
 
-        this.sendMessage();
+        this.sendMessage(message);
       });
     });
   }
 
   private receiveMessage = (message: WebSocket.Data) => {
-    console.log(message);
+    //
   };
 
-  private sendMessage = () => {
+  private sendMessage = (message: WebSocket.Data) => {
     if (this.webSocket) {
-      this.webSocket.send("Hi back from the server");
+      this.webSocket.send(message);
     }
   };
 }

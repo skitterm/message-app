@@ -34,15 +34,6 @@ class Index extends Component<Props, State> {
   }
 
   async componentDidMount() {
-    const socket = new WebSocket("ws://localhost:3002");
-    socket.addEventListener("open", () => {
-      socket.send("Hi from the browser");
-    });
-
-    socket.addEventListener("message", (event) => {
-      console.log(event.data);
-    });
-
     await this.fetchRooms();
   }
 
