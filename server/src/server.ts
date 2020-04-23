@@ -4,8 +4,12 @@ import dotenv from "dotenv";
 import UserModel from "./models/User";
 import RoomModel from "./models/Room";
 import MessageModel from "./models/Message";
+import Socket from "./socket";
 
 dotenv.config({ path: "../.env" });
+
+const socket = new Socket();
+socket.init();
 
 const app = express();
 app.use(express.json());
