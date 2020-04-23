@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import { User, Message as IMessage } from "../../types";
+import { injectUserContext, UserContextProps } from "../../context/UserContext";
 import Message from "../Message";
 import TextInput from "../TextInput";
 import Button from "../Button";
@@ -20,30 +22,9 @@ const Actions = styled.div`
   grid-column-gap: 12px;
 `;
 
-interface Message {
-  _id: string;
-  sender: string;
-  timeSent: number;
-  contents: string;
-  room: string;
-}
-
-interface User {
-  _id: string;
-  name: {
-    first: string;
-    last: string;
-  };
-  timeZone: string;
-  thumbnail: string;
-  workingHours: any[];
-  rooms: string[];
-  unreadMessages: any[];
-}
-
 interface UserMessage {
   user: User;
-  message: Message;
+  message: IMessage;
 }
 
 interface State {
@@ -51,8 +32,7 @@ interface State {
   text: string;
 }
 
-export interface Props {
-  userId: string;
+export interface Props extends UserContextProps {
   roomId: string;
 }
 
@@ -141,26 +121,19 @@ class MainTabPanel extends Component<Props, State> {
       text: "",
     });
 
+    if (!this.props.user) {
+      return;
+    }
+
     const data = {
-      sender: this.props.userId,
+      sender: this.props.user._id,
       roomId: this.props.roomId,
       contents: message,
     };
 
     this.socket.send(
       JSON.stringify({
-        user: {
-          _id: "",
-          name: {
-            first: "Test",
-            last: "User",
-          },
-          timeZone: "Pacific",
-          thumbnail: "",
-          workingHours: [],
-          rooms: [],
-          unreadMessages: [],
-        },
+        user: this.props.user,
         message: {
           _id: "",
           sender: data.sender,
@@ -181,4 +154,4 @@ class MainTabPanel extends Component<Props, State> {
   };
 }
 
-export default MainTabPanel;
+export default injectUserContext(MainTabPanel);

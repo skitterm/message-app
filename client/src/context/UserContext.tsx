@@ -1,12 +1,12 @@
 import React, { createContext, Component, ComponentType } from "react";
+import { User } from "../types";
 
 export interface UserContextProps {
-  userId: string;
+  user?: User;
   updateUserId: (userId: string) => void;
 }
 
 const UserContext = createContext({
-  userId: "",
   updateUserId: (userId: string) => {},
 });
 

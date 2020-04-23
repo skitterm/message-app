@@ -38,7 +38,7 @@ class Index extends Component<Props, State> {
   }
 
   async componentDidUpdate(prevProps: Props) {
-    if (prevProps.userId !== this.props.userId) {
+    if (prevProps.user?._id !== this.props.user?._id) {
       await this.fetchRooms();
     }
   }
@@ -64,10 +64,7 @@ class Index extends Component<Props, State> {
             })}
           </List>
           {this.state.selectedRoomId && (
-            <MainTabPanel
-              roomId={this.state.selectedRoomId}
-              userId={this.props.userId}
-            />
+            <MainTabPanel roomId={this.state.selectedRoomId} />
           )}
         </Content>
       </PageWrapper>
@@ -81,11 +78,13 @@ class Index extends Component<Props, State> {
   };
 
   private fetchRooms = async () => {
-    const userId = this.props.userId;
-    const roomsResponse = await fetch(`/users/${userId}/rooms`);
-    const roomsJson = await roomsResponse.json();
-    if (roomsJson && roomsJson.length > 0) {
-      this.setState({ rooms: roomsJson, selectedRoomId: roomsJson[0]._id });
+    if (this.props.user) {
+      const userId = this.props.user._id;
+      const roomsResponse = await fetch(`/users/${userId}/rooms`);
+      const roomsJson = await roomsResponse.json();
+      if (roomsJson && roomsJson.length > 0) {
+        this.setState({ rooms: roomsJson, selectedRoomId: roomsJson[0]._id });
+      }
     }
   };
 }

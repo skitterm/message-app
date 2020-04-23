@@ -19,7 +19,7 @@ class PageWrapper extends Component<Props> {
               label: "Home",
             },
             {
-              path: `/profiles/${this.props.userId}`,
+              path: `/profiles/${this.props.user?._id || ""}`,
               label: "Profile",
             },
             {
