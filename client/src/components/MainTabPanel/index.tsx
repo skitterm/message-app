@@ -20,8 +20,34 @@ const Actions = styled.div`
   grid-column-gap: 12px;
 `;
 
+interface Message {
+  _id: string;
+  sender: string;
+  timeSent: number;
+  contents: string;
+  room: string;
+}
+
+interface User {
+  _id: string;
+  name: {
+    first: string;
+    last: string;
+  };
+  timeZone: string;
+  thumbnail: string;
+  workingHours: any[];
+  rooms: string[];
+  unreadMessages: any[];
+}
+
+interface UserMessage {
+  user: User;
+  message: Message;
+}
+
 interface State {
-  messages: any[];
+  messages: UserMessage[];
   text: string;
 }
 
@@ -31,6 +57,8 @@ export interface Props {
 }
 
 class MainTabPanel extends Component<Props, State> {
+  private socket: WebSocket;
+
   constructor(props: Props) {
     super(props);
 
@@ -38,9 +66,23 @@ class MainTabPanel extends Component<Props, State> {
       messages: [],
       text: "",
     };
+
+    this.socket = new WebSocket("ws://localhost:3002");
   }
 
   public async componentDidMount() {
+    this.socket.addEventListener("open", () => {
+      //
+    });
+
+    this.socket.addEventListener("message", (event) => {
+      const messages = this.state.messages.slice(0);
+      messages.push(JSON.parse(event.data));
+      this.setState({
+        messages,
+      });
+    });
+
     await this.fetchMessages();
   }
 
@@ -105,14 +147,37 @@ class MainTabPanel extends Component<Props, State> {
       contents: message,
     };
 
-    await fetch(`/messages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    await this.fetchMessages();
+    this.socket.send(
+      JSON.stringify({
+        user: {
+          _id: "",
+          name: {
+            first: "Test",
+            last: "User",
+          },
+          timeZone: "Pacific",
+          thumbnail: "",
+          workingHours: [],
+          rooms: [],
+          unreadMessages: [],
+        },
+        message: {
+          _id: "",
+          sender: data.sender,
+          timeSent: 1234,
+          contents: data.contents,
+          room: data.roomId,
+        },
+      })
+    );
+
+    // await fetch(`/messages`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(data),
+    // });
   };
 }
 
