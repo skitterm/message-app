@@ -1,16 +1,11 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import config from "../config";
 import { injectUserContext, UserContextProps } from "../context/UserContext";
 import MainTabPanel from "../components/MainTabPanel";
 import Tab from "../components/Tab";
 import PageWrapper from "./PageWrapper";
 
-interface State {
-  rooms: any[];
-  selectedRoomId: string;
-}
-
-export interface Props extends UserContextProps {}
 const Content = styled.div`
   display: flex;
 `;
@@ -22,6 +17,18 @@ const List = styled.ul`
   flex-direction: column;
   align-items: stretch;
 `;
+
+interface ClientRoom {
+  client: WebSocket;
+  room: any;
+}
+
+interface State {
+  rooms: ClientRoom[];
+  selectedRoomId: string;
+}
+
+export interface Props extends UserContextProps {}
 
 class Index extends Component<Props, State> {
   constructor(props: Props) {
@@ -48,17 +55,19 @@ class Index extends Component<Props, State> {
       <PageWrapper title="Messaging App">
         <Content>
           <List>
-            {this.state.rooms.map((room) => {
+            {this.state.rooms.map((clientRoom: ClientRoom) => {
               return (
                 <Tab
-                  key={room._id}
-                  id={room._id}
-                  isSelected={room._id === this.state.selectedRoomId}
+                  key={clientRoom.room._id}
+                  id={clientRoom.room._id}
+                  isSelected={clientRoom.room._id === this.state.selectedRoomId}
                   onClick={this.onTabClicked}
                 >
-                  {room.memberInfo.map((memberInfo: any, index: number) => {
-                    return `${index > 0 ? "," : ""}${memberInfo.name.first}`;
-                  })}
+                  {clientRoom.room.memberInfo.map(
+                    (memberInfo: any, index: number) => {
+                      return `${index > 0 ? "," : ""}${memberInfo.name.first}`;
+                    }
+                  )}
                 </Tab>
               );
             })}
@@ -83,9 +92,40 @@ class Index extends Component<Props, State> {
       const roomsResponse = await fetch(`/users/${userId}/rooms`);
       const roomsJson = await roomsResponse.json();
       if (roomsJson && roomsJson.length > 0) {
-        this.setState({ rooms: roomsJson, selectedRoomId: roomsJson[0]._id });
+        await this.setState({
+          rooms: roomsJson.map((room: any) => {
+            return {
+              client: this.initWebSocket(room._id),
+              room,
+            };
+          }),
+          selectedRoomId: roomsJson[0]._id,
+        });
       }
     }
+  };
+
+  private initWebSocket = (roomId: string) => {
+    if (!roomId) {
+      return;
+    }
+    const socket = new WebSocket(config.webSocketUrl);
+    socket.addEventListener("open", () => {
+      this.sendSocketData(socket, {
+        type: "register",
+        data: { room: roomId },
+      });
+    });
+
+    socket.addEventListener("message", (event) => {
+      console.log("room has message");
+    });
+
+    return socket;
+  };
+
+  private sendSocketData = (socket: WebSocket, data: any) => {
+    socket.send(JSON.stringify({ ...data, clientType: "room" }));
   };
 }
 

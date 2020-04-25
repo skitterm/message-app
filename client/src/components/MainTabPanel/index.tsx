@@ -175,7 +175,7 @@ class MainTabPanel extends Component<Props, State> {
   };
 
   private sendSocketData = (data: SocketData) => {
-    this.socket.send(JSON.stringify(data));
+    this.socket.send(JSON.stringify({ ...data, clientType: "message" }));
   };
 
   private createSocket = () => {

@@ -3,6 +3,7 @@ import WebSocket from "ws";
 interface UserClient {
   socket: WebSocket;
   room: string;
+  type: "message" | "room";
 }
 
 class Socket {
@@ -23,7 +24,7 @@ class Socket {
         }
         const message = JSON.parse(rawMessage);
         // @ts-ignore
-        if (!message || !message.type || !message.data) {
+        if (!message || !message.clientType || !message.type || !message.data) {
           return;
         }
 
@@ -33,6 +34,7 @@ class Socket {
             this.clients.push({
               socket: webSocket,
               room: message.data.room,
+              type: message.clientType,
             });
             return;
           case "message":
