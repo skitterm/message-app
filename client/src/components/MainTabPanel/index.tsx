@@ -87,7 +87,11 @@ class MainTabPanel extends Component<Props, State> {
           })}
         </List>
         <Actions>
-          <TextInput value={this.state.text} onChange={this.onTextChanged} />
+          <TextInput
+            value={this.state.text}
+            onChange={this.onTextChanged}
+            onEnterPressed={this.onSendClicked}
+          />
           <Button
             onClick={this.onSendClicked}
             isDisabled={this.state.text.length === 0}

@@ -55,7 +55,7 @@ export const Message = (props: MessageProps) => {
           <Name>{props.name}</Name>
           <Time>{time}</Time>
         </FirstRow>
-        <Contents>Message: {props.contents}</Contents>
+        <Contents>{props.contents}</Contents>
       </div>
     </Container>
   );
