@@ -9,7 +9,7 @@ import Button from "../Button";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 32px;
+  margin-left: 16px;
   flex: 1 1 auto;
   height: 70vh;
   padding-bottom: 45px;
@@ -17,9 +17,9 @@ const Container = styled.div`
 
 const List = styled.ul`
   height: 200px;
-  overflow: auto;
+  overflow-y: auto;
+  padding-left: 16px;
   list-style-type: none;
-  padding-left: 0;
   flex: 1 1 auto;
 `;
 
@@ -32,11 +32,13 @@ const Actions = styled.div`
   grid-template-columns: 1fr auto;
   grid-column-gap: 12px;
   max-width: 70vw;
+  padding-left: 16px;
 `;
 
 interface UserMessage {
   user: User;
   message: IMessage;
+  isUnread?: boolean;
 }
 
 interface State {
@@ -98,6 +100,7 @@ class MainTabPanel extends Component<Props, State> {
                 time={message.message.timeSent}
                 thumbnail={message.user.thumbnail}
                 contents={message.message.contents}
+                isUnread={message.isUnread}
               />
             );
           })}
@@ -188,7 +191,11 @@ class MainTabPanel extends Component<Props, State> {
 
     this.socket.addEventListener("message", (event) => {
       const messages = this.state.messages.slice(0);
-      messages.push(JSON.parse(event.data));
+      const newMessage = {
+        ...JSON.parse(event.data),
+        isUnread: true,
+      };
+      messages.push(newMessage);
       this.setState({
         messages,
       });
@@ -203,7 +210,7 @@ class MainTabPanel extends Component<Props, State> {
 
   private scrollToBottom = () => {
     if (this.listRef.current) {
-      this.listRef.current.scroll(0, 3000);
+      this.listRef.current.scroll(0, this.listRef.current.scrollHeight);
     }
   };
 }

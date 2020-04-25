@@ -8,6 +8,7 @@ export interface MessageProps {
   time: number;
   thumbnail: string;
   contents: string;
+  isUnread?: boolean;
 }
 
 const Container = styled.li`
@@ -15,6 +16,7 @@ const Container = styled.li`
   grid-template-columns: auto 1fr;
   grid-column-gap: 12px;
   margin-bottom: 20px;
+  position: relative;
 `;
 
 const FirstRow = styled.div`
@@ -38,6 +40,18 @@ const Contents = styled.p`
   font-size: ${variables.fontSize.md};
 `;
 
+const Alert = styled.span`
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: ${variables.color.danger};
+`;
+
 export const Message = (props: MessageProps) => {
   const date = new Date(props.time);
   const time = date.toLocaleString("en-us", {
@@ -49,6 +63,7 @@ export const Message = (props: MessageProps) => {
 
   return (
     <Container>
+      {props.isUnread && <Alert />}
       <Avatar thumbnail={props.thumbnail} />
       <div>
         <FirstRow>
