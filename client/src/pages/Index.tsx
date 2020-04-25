@@ -21,6 +21,7 @@ const List = styled.ul`
 interface ClientRoom {
   client: WebSocket;
   room: any;
+  hasUnreadMessage: boolean;
 }
 
 interface State {
@@ -62,6 +63,7 @@ class Index extends Component<Props, State> {
                   id={clientRoom.room._id}
                   isSelected={clientRoom.room._id === this.state.selectedRoomId}
                   onClick={this.onTabClicked}
+                  shouldShowAlert={clientRoom.hasUnreadMessage}
                 >
                   {clientRoom.room.memberInfo.map(
                     (memberInfo: any, index: number) => {
@@ -97,6 +99,7 @@ class Index extends Component<Props, State> {
             return {
               client: this.initWebSocket(room._id),
               room,
+              hasUnreadMessage: false,
             };
           }),
           selectedRoomId: roomsJson[0]._id,
@@ -118,7 +121,20 @@ class Index extends Component<Props, State> {
     });
 
     socket.addEventListener("message", (event) => {
-      console.log("room has message");
+      const clientRoomIndex = this.state.rooms.findIndex(
+        (room) => room.client === socket
+      );
+      if (clientRoomIndex !== -1) {
+        const clientRoom = this.state.rooms[clientRoomIndex];
+        const newClientRoom = Object.assign({}, clientRoom, {
+          hasUnreadMessage: true,
+        });
+        const newRooms = this.state.rooms.slice(0);
+        newRooms.splice(clientRoomIndex, 1, newClientRoom);
+        this.setState({
+          rooms: newRooms,
+        });
+      }
     });
 
     return socket;

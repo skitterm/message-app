@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Avatar from "../Avatar";
+import Alert from "../Alert";
 import variables from "../../styles/variables";
 
 export interface MessageProps {
@@ -40,18 +41,6 @@ const Contents = styled.p`
   font-size: ${variables.fontSize.md};
 `;
 
-const Alert = styled.span`
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 1;
-  transform: translate(-50%, -50%);
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background-color: ${variables.color.danger};
-`;
-
 export const Message = (props: MessageProps) => {
   const date = new Date(props.time);
   const time = date.toLocaleString("en-us", {
@@ -63,7 +52,7 @@ export const Message = (props: MessageProps) => {
 
   return (
     <Container>
-      {props.isUnread && <Alert />}
+      {props.isUnread && <Alert size="normal" />}
       <Avatar thumbnail={props.thumbnail} />
       <div>
         <FirstRow>
