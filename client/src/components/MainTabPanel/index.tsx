@@ -134,11 +134,14 @@ class MainTabPanel extends Component<Props, State> {
 
     this.socket.send(
       JSON.stringify({
-        user: this.props.user,
-        message: {
-          ...data,
-          room: this.props.roomId,
-          _id: "",
+        type: "message",
+        data: {
+          user: this.props.user,
+          message: {
+            ...data,
+            room: this.props.roomId,
+            _id: "",
+          },
         },
       })
     );
