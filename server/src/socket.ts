@@ -2,7 +2,7 @@ import WebSocket from "ws";
 
 interface UserClient {
   socket: WebSocket;
-  rooms: string[];
+  room: string;
 }
 
 class Socket {
@@ -32,7 +32,7 @@ class Socket {
           case "register":
             this.clients.push({
               socket: webSocket,
-              rooms: message.data.rooms,
+              room: message.data.room,
             });
             return;
           case "message":
@@ -42,7 +42,6 @@ class Socket {
           default:
             return;
         }
-        this.receiveMessage(message);
       });
 
       webSocket.on("close", () => {
@@ -56,13 +55,19 @@ class Socket {
     });
   }
 
-  private receiveMessage = (message: WebSocket.Data) => {};
-
   private sendMessage = (data: any) => {
+    const roomId = data.message.room;
+
     this.clients.forEach((client: UserClient) => {
       if (!client.socket) {
         return;
       }
+
+      // only send the message to clients who are in this room
+      if (client.room !== roomId) {
+        return;
+      }
+
       if (client.socket.readyState === WebSocket.OPEN) {
         // @ts-ignore
         client.socket.send(JSON.stringify(data));

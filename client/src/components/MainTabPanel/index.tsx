@@ -42,6 +42,7 @@ export interface Props extends UserContextProps {
 }
 
 class MainTabPanel extends Component<Props, State> {
+  // @ts-ignore
   private socket: WebSocket;
 
   constructor(props: Props) {
@@ -52,30 +53,18 @@ class MainTabPanel extends Component<Props, State> {
       text: "",
     };
 
-    this.socket = new WebSocket("ws://localhost:3002");
+    this.createSocket();
   }
 
   public async componentDidMount() {
-    this.socket.addEventListener("open", () => {
-      this.sendSocketData({
-        type: "register",
-        data: { rooms: this.props.user?.rooms },
-      });
-    });
-
-    this.socket.addEventListener("message", (event) => {
-      const messages = this.state.messages.slice(0);
-      messages.push(JSON.parse(event.data));
-      this.setState({
-        messages,
-      });
-    });
-
     await this.fetchMessages();
   }
 
   public async componentDidUpdate(prevProps: Props) {
     if (this.props.roomId !== prevProps.roomId) {
+      this.closeSocket();
+      this.createSocket();
+
       await this.fetchMessages();
     }
   }
@@ -163,6 +152,31 @@ class MainTabPanel extends Component<Props, State> {
 
   private sendSocketData = (data: SocketData) => {
     this.socket.send(JSON.stringify(data));
+  };
+
+  private createSocket = () => {
+    this.socket = new WebSocket("ws://localhost:3002");
+
+    this.socket.addEventListener("open", () => {
+      if (this.props.user) {
+        this.sendSocketData({
+          type: "register",
+          data: { room: this.props.roomId },
+        });
+      }
+    });
+
+    this.socket.addEventListener("message", (event) => {
+      const messages = this.state.messages.slice(0);
+      messages.push(JSON.parse(event.data));
+      this.setState({
+        messages,
+      });
+    });
+  };
+
+  private closeSocket = () => {
+    this.socket.close();
   };
 }
 
