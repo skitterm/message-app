@@ -13,7 +13,7 @@ class Socket {
       webSocket.on("message", (message) => {
         this.receiveMessage(message);
 
-        this.sendMessage(message);
+        this.sendMessage(wss, message);
       });
     });
   }
@@ -22,10 +22,12 @@ class Socket {
     //
   };
 
-  private sendMessage = (message: WebSocket.Data) => {
-    if (this.webSocket) {
-      this.webSocket.send(message);
-    }
+  private sendMessage = (wss: WebSocket.Server, message: WebSocket.Data) => {
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      }
+    });
   };
 }
 

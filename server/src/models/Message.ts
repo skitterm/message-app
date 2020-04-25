@@ -16,11 +16,16 @@ class MessageModel extends Model {
     return messages;
   }
 
-  public async addItem(senderId: string, roomId: string, contents: string) {
+  public async addItem(
+    senderId: string,
+    roomId: string,
+    contents: string,
+    timeSent: number
+  ) {
     const collection = await this.getCollection();
     const result = await collection.insertOne({
       sender: new ObjectID(senderId),
-      timeSent: Date.now(),
+      timeSent,
       contents,
       room: new ObjectID(roomId),
     });

@@ -89,7 +89,8 @@ app.use(express.json());
       const addedMessageId = await messageModel.addItem(
         req.body.sender as string,
         req.body.roomId as string,
-        req.body.contents as string
+        req.body.contents as string,
+        req.body.timeSent as number
       );
 
       // add to rooms as well

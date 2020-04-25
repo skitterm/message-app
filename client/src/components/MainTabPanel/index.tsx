@@ -129,28 +129,27 @@ class MainTabPanel extends Component<Props, State> {
       sender: this.props.user._id,
       roomId: this.props.roomId,
       contents: message,
+      timeSent: Date.now(),
     };
 
     this.socket.send(
       JSON.stringify({
         user: this.props.user,
         message: {
+          ...data,
+          room: this.props.roomId,
           _id: "",
-          sender: data.sender,
-          timeSent: 1234,
-          contents: data.contents,
-          room: data.roomId,
         },
       })
     );
 
-    // await fetch(`/messages`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(data),
-    // });
+    await fetch(`/messages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
   };
 }
 
