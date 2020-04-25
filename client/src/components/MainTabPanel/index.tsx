@@ -7,16 +7,27 @@ import TextInput from "../TextInput";
 import Button from "../Button";
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   margin-left: 32px;
   flex: 1 1 auto;
+  height: 75vh;
+  padding-bottom: 45px;
 `;
 
 const List = styled.ul`
+  height: 200px;
+  overflow: auto;
   list-style-type: none;
   padding-left: 0;
+  flex: 1 1 auto;
 `;
 
 const Actions = styled.div`
+  position: sticky;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: grid;
   grid-template-columns: 1fr auto;
   grid-column-gap: 12px;
