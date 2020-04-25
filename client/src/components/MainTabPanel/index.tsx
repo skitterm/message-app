@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, RefObject, createRef } from "react";
 import styled from "styled-components";
 import { User, Message as IMessage } from "../../types";
 import { injectUserContext, UserContextProps } from "../../context/UserContext";
@@ -11,7 +11,7 @@ const Container = styled.div`
   flex-direction: column;
   margin-left: 32px;
   flex: 1 1 auto;
-  height: 75vh;
+  height: 70vh;
   padding-bottom: 45px;
 `;
 
@@ -31,6 +31,7 @@ const Actions = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
   grid-column-gap: 12px;
+  max-width: 70vw;
 `;
 
 interface UserMessage {
@@ -55,6 +56,7 @@ export interface Props extends UserContextProps {
 class MainTabPanel extends Component<Props, State> {
   // @ts-ignore
   private socket: WebSocket;
+  private listRef: RefObject<HTMLUListElement>;
 
   constructor(props: Props) {
     super(props);
@@ -64,11 +66,13 @@ class MainTabPanel extends Component<Props, State> {
       text: "",
     };
 
+    this.listRef = createRef();
     this.createSocket();
   }
 
   public async componentDidMount() {
     await this.fetchMessages();
+    this.scrollToBottom();
   }
 
   public async componentDidUpdate(prevProps: Props) {
@@ -77,13 +81,14 @@ class MainTabPanel extends Component<Props, State> {
       this.createSocket();
 
       await this.fetchMessages();
+      this.scrollToBottom();
     }
   }
 
   public render() {
     return (
       <Container>
-        <List>
+        <List ref={this.listRef}>
           {this.state.messages.map((message) => {
             const fullName = `${message.user.name.first} ${message.user.name.last}`;
             return (
@@ -187,11 +192,19 @@ class MainTabPanel extends Component<Props, State> {
       this.setState({
         messages,
       });
+
+      this.scrollToBottom();
     });
   };
 
   private closeSocket = () => {
     this.socket.close();
+  };
+
+  private scrollToBottom = () => {
+    if (this.listRef.current) {
+      this.listRef.current.scroll(0, 3000);
+    }
   };
 }
 
