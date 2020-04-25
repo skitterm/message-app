@@ -32,6 +32,11 @@ interface State {
   text: string;
 }
 
+interface SocketData {
+  type: "register" | "message";
+  data: any;
+}
+
 export interface Props extends UserContextProps {
   roomId: string;
 }
@@ -52,7 +57,10 @@ class MainTabPanel extends Component<Props, State> {
 
   public async componentDidMount() {
     this.socket.addEventListener("open", () => {
-      //
+      this.sendSocketData({
+        type: "register",
+        data: { rooms: this.props.user?.rooms },
+      });
     });
 
     this.socket.addEventListener("message", (event) => {
@@ -132,19 +140,17 @@ class MainTabPanel extends Component<Props, State> {
       timeSent: Date.now(),
     };
 
-    this.socket.send(
-      JSON.stringify({
-        type: "message",
-        data: {
-          user: this.props.user,
-          message: {
-            ...data,
-            room: this.props.roomId,
-            _id: "",
-          },
+    this.sendSocketData({
+      type: "message",
+      data: {
+        user: this.props.user,
+        message: {
+          ...data,
+          room: this.props.roomId,
+          _id: "",
         },
-      })
-    );
+      },
+    });
 
     await fetch(`/messages`, {
       method: "POST",
@@ -153,6 +159,10 @@ class MainTabPanel extends Component<Props, State> {
       },
       body: JSON.stringify(data),
     });
+  };
+
+  private sendSocketData = (data: SocketData) => {
+    this.socket.send(JSON.stringify(data));
   };
 }
 

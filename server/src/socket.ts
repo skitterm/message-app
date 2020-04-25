@@ -17,31 +17,27 @@ class Socket {
     this.webSocketServer = new WebSocket.Server({ port: 3002 });
 
     this.webSocketServer.on("connection", (webSocket) => {
-      this.clients.push({
-        socket: webSocket,
-        rooms: [],
-      });
-
       webSocket.on("message", (rawMessage) => {
         if (typeof rawMessage !== "string") {
           return;
         }
         const message = JSON.parse(rawMessage);
         // @ts-ignore
-        if (!message || !message.type) {
+        if (!message || !message.type || !message.data) {
           return;
         }
 
         // @ts-ignore
         switch (message.type) {
           case "register":
+            this.clients.push({
+              socket: webSocket,
+              rooms: message.data.rooms,
+            });
             return;
           case "message":
             // @ts-ignore
-            if (message.data) {
-              // @ts-ignore
-              this.sendMessage(message.data);
-            }
+            this.sendMessage(message.data);
             return;
           default:
             return;
