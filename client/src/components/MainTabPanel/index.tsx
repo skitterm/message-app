@@ -1,6 +1,7 @@
 import React, { Component, RefObject, createRef } from "react";
 import styled from "styled-components";
 import { User, Message as IMessage } from "../../types";
+import config from "../../config";
 import { injectUserContext, UserContextProps } from "../../context/UserContext";
 import Message from "../Message";
 import TextInput from "../TextInput";
@@ -178,7 +179,7 @@ class MainTabPanel extends Component<Props, State> {
   };
 
   private createSocket = () => {
-    this.socket = new WebSocket("ws://localhost:3002");
+    this.socket = new WebSocket(config.webSocketUrl);
 
     this.socket.addEventListener("open", () => {
       if (this.props.user) {
