@@ -183,7 +183,7 @@ class Index extends Component<Props, State> {
     socket.addEventListener("open", () => {
       this.sendSocketData(socket, "user", {
         type: "register",
-        data: { id: userId },
+        data: { id: userId, isCurrentUser: userId === this.props.user?._id },
       });
     });
 

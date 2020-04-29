@@ -31,7 +31,7 @@ class Socket {
         // @ts-ignore
         switch (message.type) {
           case "register":
-            if (message.clientType === "user") {
+            if (message.clientType === "user" && message.data.isCurrentUser) {
               this.clients.forEach((client) => {
                 if (client.id === message.data.id) {
                   client.socket.send(JSON.stringify({ id: client.id }));
