@@ -18,6 +18,7 @@ const ListItem = styled.li`
 const Button = styled.button<{ isSelected: boolean; isAlive: boolean }>`
   display: block;
   width: 100%;
+  cursor: pointer;
   text-align: start;
   padding: 5px 15px;
   border: none;

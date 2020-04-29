@@ -2,7 +2,7 @@ import WebSocket from "ws";
 
 interface UserClient {
   socket: WebSocket;
-  room: string;
+  id: string;
   type: "message" | "room";
 }
 
@@ -33,7 +33,7 @@ class Socket {
           case "register":
             this.clients.push({
               socket: webSocket,
-              room: message.data.room,
+              id: message.data.id,
               type: message.clientType,
             });
             return;
@@ -66,7 +66,7 @@ class Socket {
       }
 
       // only send the message to clients who are in this room
-      if (client.room !== roomId) {
+      if (client.id !== roomId) {
         return;
       }
 

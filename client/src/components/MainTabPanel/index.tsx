@@ -185,7 +185,7 @@ class MainTabPanel extends Component<Props, State> {
       if (this.props.user) {
         this.sendSocketData({
           type: "register",
-          data: { room: this.props.roomId },
+          data: { id: this.props.roomId },
         });
       }
     });

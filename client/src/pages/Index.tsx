@@ -121,7 +121,7 @@ class Index extends Component<Props, State> {
     socket.addEventListener("open", () => {
       this.sendSocketData(socket, {
         type: "register",
-        data: { room: roomId },
+        data: { id: roomId },
       });
     });
 
