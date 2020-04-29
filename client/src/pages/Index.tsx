@@ -95,6 +95,21 @@ class Index extends Component<Props, State> {
 
   private fetchRooms = async () => {
     if (this.props.user) {
+      const socket = new WebSocket(config.webSocketUrl);
+      socket.addEventListener("open", () => {
+        if (this.props.user) {
+          this.sendSocketData(socket, "user", {
+            type: "register",
+            data: { id: this.props.user._id },
+          });
+        }
+      });
+
+      socket.addEventListener("message", (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data);
+      });
+
       const userId = this.props.user._id;
       const roomsResponse = await fetch(`/users/${userId}/rooms`);
       const roomsJson = await roomsResponse.json();
@@ -119,7 +134,7 @@ class Index extends Component<Props, State> {
     }
     const socket = new WebSocket(config.webSocketUrl);
     socket.addEventListener("open", () => {
-      this.sendSocketData(socket, {
+      this.sendSocketData(socket, "room", {
         type: "register",
         data: { id: roomId },
       });
@@ -145,8 +160,12 @@ class Index extends Component<Props, State> {
     return socket;
   };
 
-  private sendSocketData = (socket: WebSocket, data: any) => {
-    socket.send(JSON.stringify({ ...data, clientType: "room" }));
+  private sendSocketData = (
+    socket: WebSocket,
+    clientType: string,
+    data: any
+  ) => {
+    socket.send(JSON.stringify({ ...data, clientType }));
   };
 }
 

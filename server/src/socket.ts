@@ -3,7 +3,7 @@ import WebSocket from "ws";
 interface UserClient {
   socket: WebSocket;
   id: string;
-  type: "message" | "room";
+  type: "message" | "room" | "user";
 }
 
 class Socket {
@@ -31,6 +31,14 @@ class Socket {
         // @ts-ignore
         switch (message.type) {
           case "register":
+            if (message.clientType === "user") {
+              this.clients.forEach((client) => {
+                if (client.id === message.data.id) {
+                  client.socket.send(JSON.stringify({ a: "test" }));
+                }
+              });
+            }
+
             this.clients.push({
               socket: webSocket,
               id: message.data.id,
@@ -47,6 +55,16 @@ class Socket {
       });
 
       webSocket.on("close", () => {
+        const client = this.clients.find((clientItem) => {
+          return clientItem.socket === webSocket;
+        });
+        if (client && client.type === "user") {
+          setTimeout(() => {
+            console.log("USER HOPPED OFFLINE");
+            console.log("*************************");
+          }, 2000);
+        }
+
         // remove the now-closed client from our clients
         const newClients = this.clients.filter((client: UserClient) => {
           return client.socket !== webSocket;
@@ -61,7 +79,7 @@ class Socket {
     const roomId = data.message.room;
 
     this.clients.forEach((client: UserClient) => {
-      if (!client.socket) {
+      if (!client.socket || client.type === "user") {
         return;
       }
 
