@@ -34,7 +34,7 @@ class Socket {
             if (message.clientType === "user") {
               this.clients.forEach((client) => {
                 if (client.id === message.data.id) {
-                  client.socket.send(JSON.stringify({ a: "test" }));
+                  client.socket.send(JSON.stringify({ id: client.id }));
                 }
               });
             }

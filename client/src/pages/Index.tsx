@@ -24,9 +24,15 @@ interface ClientRoom {
   hasUnreadMessage: boolean;
 }
 
+interface UserSocket {
+  userId: string;
+  client: WebSocket;
+}
+
 interface State {
   rooms: ClientRoom[];
   selectedRoomId: string;
+  userSockets: UserSocket[];
 }
 
 export interface Props extends UserContextProps {}
@@ -38,6 +44,7 @@ class Index extends Component<Props, State> {
     this.state = {
       rooms: [],
       selectedRoomId: "",
+      userSockets: [],
     };
   }
 
@@ -95,40 +102,51 @@ class Index extends Component<Props, State> {
 
   private fetchRooms = async () => {
     if (this.props.user) {
-      const socket = new WebSocket(config.webSocketUrl);
-      socket.addEventListener("open", () => {
-        if (this.props.user) {
-          this.sendSocketData(socket, "user", {
-            type: "register",
-            data: { id: this.props.user._id },
-          });
-        }
-      });
-
-      socket.addEventListener("message", (event) => {
-        const data = JSON.parse(event.data);
-        console.log(data);
-      });
+      this.initUserWebSocket(this.props.user._id);
 
       const userId = this.props.user._id;
       const roomsResponse = await fetch(`/users/${userId}/rooms`);
       const roomsJson = await roomsResponse.json();
       if (roomsJson && roomsJson.length > 0) {
+        const allUsers = this.getAllConnectedUsers(roomsJson);
+
         await this.setState({
           rooms: roomsJson.map((room: any) => {
             return {
-              client: this.initWebSocket(room._id),
+              client: this.initRoomWebSocket(room._id),
               room,
               hasUnreadMessage: false,
             };
           }),
           selectedRoomId: roomsJson[0]._id,
+          userSockets: allUsers.map((userId: string) => {
+            return {
+              userId,
+              client: this.initUserWebSocket(userId),
+            };
+          }),
         });
       }
     }
   };
 
-  private initWebSocket = (roomId: string) => {
+  private getAllConnectedUsers = (rooms: any[]) => {
+    if (!this.props.user) {
+      return [];
+    }
+    const users: string[] = [];
+    rooms.forEach((room: any) => {
+      room.memberInfo.forEach((infoItem: any) => {
+        if (infoItem._id !== this.props.user?._id) {
+          users.push(infoItem._id);
+        }
+      });
+    });
+
+    return users;
+  };
+
+  private initRoomWebSocket = (roomId: string) => {
     if (!roomId) {
       return;
     }
@@ -154,6 +172,25 @@ class Index extends Component<Props, State> {
         this.setState({
           rooms: newRooms,
         });
+      }
+    });
+
+    return socket;
+  };
+
+  private initUserWebSocket = (userId: string) => {
+    const socket = new WebSocket(config.webSocketUrl);
+    socket.addEventListener("open", () => {
+      this.sendSocketData(socket, "user", {
+        type: "register",
+        data: { id: userId },
+      });
+    });
+
+    socket.addEventListener("message", (event) => {
+      const data = JSON.parse(event.data);
+      if (data.id !== this.props.user?._id) {
+        console.log("another user is on right now");
       }
     });
 
