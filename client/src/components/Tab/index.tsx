@@ -6,6 +6,7 @@ import Alert from "../Alert";
 export interface Props {
   id: string;
   isSelected: boolean;
+  isAlive: boolean;
   onClick: (id: string) => void;
   shouldShowAlert: boolean;
 }
@@ -14,7 +15,7 @@ const ListItem = styled.li`
   position: relative;
 `;
 
-const Button = styled.button<{ isSelected: boolean }>`
+const Button = styled.button<{ isSelected: boolean; isAlive: boolean }>`
   display: block;
   width: 100%;
   text-align: start;
@@ -24,6 +25,10 @@ const Button = styled.button<{ isSelected: boolean }>`
   border-left-color: ${(props) =>
     props.isSelected ? variables.color.accent : "transparent"};
   margin-bottom: 5px;
+  border-right-width: 3px;
+  border-right-style: solid;
+  border-right-color: ${(props) =>
+    props.isAlive ? variables.color.success : `${variables.color.success}40`};
   font-size: ${variables.fontSize.sm};
 `;
 
@@ -32,7 +37,11 @@ class Tab extends Component<Props> {
     return (
       <ListItem>
         {this.props.shouldShowAlert && <Alert size="small" />}
-        <Button onClick={this.onClick} isSelected={this.props.isSelected}>
+        <Button
+          onClick={this.onClick}
+          isSelected={this.props.isSelected}
+          isAlive={this.props.isAlive}
+        >
           {this.props.children}
         </Button>
       </ListItem>

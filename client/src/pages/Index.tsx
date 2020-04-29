@@ -56,7 +56,7 @@ class Index extends Component<Props, State> {
       <PageWrapper title="Messaging App">
         <Content>
           <List>
-            {this.state.rooms.map((clientRoom: ClientRoom) => {
+            {this.state.rooms.map((clientRoom: ClientRoom, index) => {
               return (
                 <Tab
                   key={clientRoom.room._id}
@@ -64,12 +64,17 @@ class Index extends Component<Props, State> {
                   isSelected={clientRoom.room._id === this.state.selectedRoomId}
                   onClick={this.onTabClicked}
                   shouldShowAlert={clientRoom.hasUnreadMessage}
+                  isAlive={index === 0}
                 >
-                  {clientRoom.room.memberInfo.map(
-                    (memberInfo: any, index: number) => {
-                      return `${index > 0 ? "," : ""}${memberInfo.name.first}`;
-                    }
-                  )}
+                  {clientRoom.room.memberInfo
+                    .filter((memberInfo: any) => {
+                      return memberInfo._id !== this.props.user?._id;
+                    })
+                    .map((memberInfo: any, index: number) => {
+                      return `${index > 0 ? "," : ""}${memberInfo.name.first} ${
+                        memberInfo.name.last
+                      }`;
+                    })}
                 </Tab>
               );
             })}
