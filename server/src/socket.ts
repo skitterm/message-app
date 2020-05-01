@@ -31,12 +31,21 @@ class Socket {
         // @ts-ignore
         switch (message.type) {
           case "register":
-            if (message.clientType === "user" && message.data.isCurrentUser) {
-              this.clients.forEach((client) => {
-                if (client.id === message.data.id) {
-                  client.socket.send(JSON.stringify({ id: client.id }));
+            if (message.clientType === "user") {
+              if (message.data.isCurrentUser) {
+                this.sendUserMessage(message.data.id, true);
+              } else {
+                // see if online, if so, send message back.
+                const userSocket = this.clients.find(
+                  (client) => client.id === message.data.id
+                );
+
+                if (userSocket) {
+                  webSocket.send(
+                    JSON.stringify({ id: message.data.id, isActive: true })
+                  );
                 }
-              });
+              }
             }
 
             this.clients.push({
@@ -59,10 +68,7 @@ class Socket {
           return clientItem.socket === webSocket;
         });
         if (client && client.type === "user") {
-          setTimeout(() => {
-            console.log("USER HOPPED OFFLINE");
-            console.log("*************************");
-          }, 2000);
+          this.sendUserMessage(client.id, false);
         }
 
         // remove the now-closed client from our clients
@@ -91,6 +97,14 @@ class Socket {
       if (client.socket.readyState === WebSocket.OPEN) {
         // @ts-ignore
         client.socket.send(JSON.stringify(data));
+      }
+    });
+  };
+
+  private sendUserMessage = (id: string, isActive: boolean) => {
+    this.clients.forEach((client) => {
+      if (client.id === id) {
+        client.socket.send(JSON.stringify({ id: client.id, isActive }));
       }
     });
   };

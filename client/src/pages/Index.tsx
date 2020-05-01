@@ -198,7 +198,6 @@ class Index extends Component<Props, State> {
     socket.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
       if (data.id !== this.props.user?._id) {
-        console.log("another user is on right now");
         const userSockets = this.state.userSockets.slice(0);
         const userSocketIndex = userSockets.findIndex(
           (socketItem) => socketItem.client === socket
@@ -209,7 +208,9 @@ class Index extends Component<Props, State> {
         }
 
         const userSocket = userSockets[userSocketIndex];
-        const updatedSocket = Object.assign({}, userSocket, { isActive: true });
+        const updatedSocket = Object.assign({}, userSocket, {
+          isActive: data.isActive,
+        });
         userSockets.splice(userSocketIndex, 1, updatedSocket);
         this.setState({
           userSockets: userSockets,
