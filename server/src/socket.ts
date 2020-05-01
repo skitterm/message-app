@@ -97,8 +97,15 @@ class Socket {
       }
 
       if (client.socket.readyState === WebSocket.OPEN) {
-        // @ts-ignore
-        client.socket.send(JSON.stringify(data));
+        const dateToSend =
+          typeof data.message.dateToSend === "number"
+            ? data.message.dateToSend
+            : Date.now();
+        const difference = dateToSend - Date.now();
+
+        setTimeout(() => {
+          client.socket.send(JSON.stringify(data));
+        }, difference);
       }
     });
   };

@@ -160,6 +160,7 @@ class MainTabPanel extends Component<Props, State> {
         message: {
           ...data,
           room: this.props.roomId,
+          dateToSend: Date.now() + 10000,
           _id: "",
         },
       },
