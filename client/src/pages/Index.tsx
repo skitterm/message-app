@@ -27,6 +27,7 @@ interface ClientRoom {
 interface UserSocket {
   userId: string;
   client: WebSocket;
+  isActive: boolean;
 }
 
 interface State {
@@ -64,6 +65,19 @@ class Index extends Component<Props, State> {
         <Content>
           <List>
             {this.state.rooms.map((clientRoom: ClientRoom, index) => {
+              const otherRoomUser = clientRoom.room.memberInfo.filter(
+                (memberInfo: any) => {
+                  return memberInfo._id !== this.props.user?._id;
+                }
+              )[0];
+              if (!otherRoomUser) {
+                return null;
+              }
+
+              const otherUserSocket = this.state.userSockets.find(
+                (userSocket) => userSocket.userId === otherRoomUser._id
+              );
+
               return (
                 <Tab
                   key={clientRoom.room._id}
@@ -71,17 +85,10 @@ class Index extends Component<Props, State> {
                   isSelected={clientRoom.room._id === this.state.selectedRoomId}
                   onClick={this.onTabClicked}
                   shouldShowAlert={clientRoom.hasUnreadMessage}
-                  isAlive={index === 0}
+                  isAlive={otherUserSocket ? otherUserSocket.isActive : false}
                 >
-                  {clientRoom.room.memberInfo
-                    .filter((memberInfo: any) => {
-                      return memberInfo._id !== this.props.user?._id;
-                    })
-                    .map((memberInfo: any, index: number) => {
-                      return `${index > 0 ? "," : ""}${memberInfo.name.first} ${
-                        memberInfo.name.last
-                      }`;
-                    })}
+                  {otherRoomUser &&
+                    `${otherRoomUser.name.first} ${otherRoomUser.name.last}`}
                 </Tab>
               );
             })}
@@ -123,6 +130,7 @@ class Index extends Component<Props, State> {
             return {
               userId,
               client: this.initUserWebSocket(userId),
+              isActive: false,
             };
           }),
         });
@@ -191,6 +199,21 @@ class Index extends Component<Props, State> {
       const data = JSON.parse(event.data);
       if (data.id !== this.props.user?._id) {
         console.log("another user is on right now");
+        const userSockets = this.state.userSockets.slice(0);
+        const userSocketIndex = userSockets.findIndex(
+          (socketItem) => socketItem.client === socket
+        );
+
+        if (userSocketIndex === -1) {
+          return;
+        }
+
+        const userSocket = userSockets[userSocketIndex];
+        const updatedSocket = Object.assign({}, userSocket, { isActive: true });
+        userSockets.splice(userSocketIndex, 1, updatedSocket);
+        this.setState({
+          userSockets: userSockets,
+        });
       }
     });
 
