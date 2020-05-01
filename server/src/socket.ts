@@ -3,6 +3,7 @@ import WebSocket from "ws";
 interface UserClient {
   socket: WebSocket;
   id: string;
+  isSourceUser?: boolean;
   type: "message" | "room" | "user";
 }
 
@@ -32,26 +33,14 @@ class Socket {
         switch (message.type) {
           case "register":
             if (message.clientType === "user") {
-              if (message.data.isCurrentUser) {
-                this.sendUserMessage(message.data.id, true);
-              } else {
-                // see if online, if so, send message back.
-                const userSocket = this.clients.find(
-                  (client) => client.id === message.data.id
-                );
-
-                if (userSocket) {
-                  webSocket.send(
-                    JSON.stringify({ id: message.data.id, isActive: true })
-                  );
-                }
-              }
+              this.registerUserClient(webSocket, message.data);
             }
 
             this.clients.push({
               socket: webSocket,
               id: message.data.id,
               type: message.clientType,
+              isSourceUser: message.data.isCurrentUser,
             });
             return;
           case "message":
@@ -67,9 +56,6 @@ class Socket {
         const client = this.clients.find((clientItem) => {
           return clientItem.socket === webSocket;
         });
-        if (client && client.type === "user") {
-          this.sendUserMessage(client.id, false);
-        }
 
         // remove the now-closed client from our clients
         const newClients = this.clients.filter((client: UserClient) => {
@@ -77,6 +63,22 @@ class Socket {
         });
 
         this.clients = newClients;
+
+        if (client && client.type === "user") {
+          // let all concerned sockets know that this has closed
+          // but only if the user's presence isn't also elsewhere
+          const otherUserSocket = this.clients.find((otherClientItem) => {
+            return (
+              otherClientItem.type === "user" &&
+              otherClientItem.id === client.id &&
+              otherClientItem.isSourceUser
+            );
+          });
+
+          if (!otherUserSocket) {
+            this.sendUserMessage(client.id, false);
+          }
+        }
       });
     });
   }
@@ -99,6 +101,21 @@ class Socket {
         client.socket.send(JSON.stringify(data));
       }
     });
+  };
+
+  private registerUserClient = (socket: WebSocket, data: any) => {
+    if (data.isCurrentUser) {
+      this.sendUserMessage(data.id, true);
+    } else {
+      // see if online, if so, send message back.
+      const userSocket = this.clients.find(
+        (client) => client.id === data.id && client.isSourceUser
+      );
+
+      if (userSocket) {
+        socket.send(JSON.stringify({ id: data.id, isActive: true }));
+      }
+    }
   };
 
   private sendUserMessage = (id: string, isActive: boolean) => {
