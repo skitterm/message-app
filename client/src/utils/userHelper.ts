@@ -12,7 +12,7 @@ export const signOutUser = () => {
   const auth2 = gapi.auth2.getAuthInstance();
   if (auth2) {
     auth2.signOut().then(() => {
-      console.log("Signed out");
+      window.location.reload();
     });
   }
 };

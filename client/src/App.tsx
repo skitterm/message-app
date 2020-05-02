@@ -83,15 +83,15 @@ class App extends Component<{}, State> {
       return user;
     } catch (error) {
       // if there is no user, put one in localstorage
-      const userResponse = await fetch(`/users`);
-      if (userResponse.status !== 200) {
-        throw new Error(userResponse.statusText);
-      }
-      const users = await userResponse.json();
-      if (users && users.length > 0) {
-        this.updateUserId(users[0]._id);
-        window.location.reload();
-      }
+      // const userResponse = await fetch(`/users`);
+      // if (userResponse.status !== 200) {
+      //   throw new Error(userResponse.statusText);
+      // }
+      // const users = await userResponse.json();
+      // if (users && users.length > 0) {
+      //   this.updateUserId(users[0]._id);
+      //   window.location.reload();
+      // }
     }
   };
 }

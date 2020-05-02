@@ -41,7 +41,6 @@ app.use(express.json());
     app.get("/users/:id", async (req, res) => {
       try {
         const user = await userModel.getById(req.params.id);
-
         res.send(user);
       } catch (error) {
         console.log(error);
@@ -111,7 +110,15 @@ app.use(express.json());
       });
       const payload = ticket.getPayload();
       const userId = payload.sub;
-      console.log("G User ID: ", userId);
+      const firstName = payload.given_name;
+      const lastName = payload.family_name;
+
+      const user = userModel.getById(userId);
+      // if user doesn't already exist, create a new user.
+
+      if (!userId) {
+        userModel.addItem(userId, firstName, lastName);
+      }
     });
   });
 })();

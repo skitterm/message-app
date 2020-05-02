@@ -10,9 +10,21 @@ const StyledButton = styled.button`
   background-color: transparent;
 `;
 
+interface State {
+  isSignedIn: boolean;
+}
+
 interface Props {}
 
-class Index extends Component<Props> {
+class Index extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      isSignedIn: false,
+    };
+  }
+
   public componentDidMount() {
     // @ts-ignore -- .gapi does exist
     const googleAPI = window.gapi;
@@ -22,15 +34,17 @@ class Index extends Component<Props> {
         cookiepolicy: "single-host-origin",
       });
 
-      console.log("is signed in:", GoogleAuth.isSignedIn.get());
+      this.setState({ isSignedIn: GoogleAuth.isSignedIn.get() });
 
-      googleAPI.signin2.render("sign-in-button", {
-        height: 50,
-        width: "auto",
-        theme: "dark",
-        longTitle: true,
-        onSuccess: this.onSignInSuccess,
-      });
+      if (!this.state.isSignedIn) {
+        googleAPI.signin2.render("sign-in-button", {
+          height: 50,
+          width: "auto",
+          theme: "dark",
+          longTitle: true,
+          onSuccess: this.onSignInSuccess,
+        });
+      }
     });
   }
 
