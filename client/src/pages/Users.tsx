@@ -1,5 +1,21 @@
 import React, { Component } from "react";
+import styled from "styled-components";
+import Button from "../components/Button";
+import Avatar from "../components/Avatar";
 import PageWrapper from "./PageWrapper";
+
+const ListItem = styled.li`
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+`;
+
+const Details = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 16px;
+`;
 
 interface State {
   allUsers: any[];
@@ -26,9 +42,15 @@ class Users extends Component<Props, State> {
         <ul>
           {this.state.allUsers.map((user) => {
             return (
-              <li key={user._id}>
-                {user.name.first} {user.name.last}
-              </li>
+              <ListItem key={user._id}>
+                <Avatar thumbnail={user.thumbnail} size="large" />
+                <Details>
+                  <h3>
+                    {user.name.first} {user.name.last}
+                  </h3>
+                  <Button>Start messaging</Button>
+                </Details>
+              </ListItem>
             );
           })}
         </ul>
