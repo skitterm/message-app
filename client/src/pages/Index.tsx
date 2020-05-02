@@ -50,6 +50,19 @@ class Index extends Component<Props, State> {
   }
 
   async componentDidMount() {
+    // @ts-ignore -- .gapi does exist
+    const googleAPI = window.gapi;
+    googleAPI.load("auth2", () => {
+      googleAPI.auth2
+        .init({
+          client_id: config.googleClientId,
+          cookiepolicy: "single-host-origin",
+        })
+        .then((GoogleAuth: any) => {
+          console.log("is signed in:", GoogleAuth.isSignedIn.get());
+        });
+    });
+
     await this.fetchRooms();
   }
 
@@ -62,6 +75,7 @@ class Index extends Component<Props, State> {
   public render() {
     return (
       <PageWrapper title="Messaging App">
+        <div className="g-signin2"></div>
         <Content>
           <List>
             {this.state.rooms.map((clientRoom: ClientRoom, index) => {
@@ -100,6 +114,10 @@ class Index extends Component<Props, State> {
       </PageWrapper>
     );
   }
+
+  private onSignIn = (googleUser: any) => {
+    console.log(`user ${googleUser.getBasicProfile().getName()} signed in`);
+  };
 
   private onTabClicked = (roomId: string) => {
     this.setState({
