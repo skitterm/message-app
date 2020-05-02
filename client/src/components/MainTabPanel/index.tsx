@@ -1,5 +1,7 @@
 import React, { Component, RefObject, createRef } from "react";
 import styled from "styled-components";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { User, Message as IMessage } from "../../types";
 import config from "../../config";
 import { injectUserContext, UserContextProps } from "../../context/UserContext";
@@ -45,6 +47,7 @@ interface UserMessage {
 interface State {
   messages: UserMessage[];
   text: string;
+  pickerDate: Date;
 }
 
 interface SocketData {
@@ -60,6 +63,8 @@ class MainTabPanel extends Component<Props, State> {
   // @ts-ignore
   private socket: WebSocket;
   private listRef: RefObject<HTMLUListElement>;
+  private startPickerDate: Date;
+  private endPickerDate: Date;
 
   constructor(props: Props) {
     super(props);
@@ -67,9 +72,12 @@ class MainTabPanel extends Component<Props, State> {
     this.state = {
       messages: [],
       text: "",
+      pickerDate: new Date(),
     };
 
     this.listRef = createRef();
+    this.startPickerDate = new Date();
+    this.endPickerDate = new Date(Date.now() + 300000000);
     this.createSocket();
   }
 
@@ -106,6 +114,16 @@ class MainTabPanel extends Component<Props, State> {
             );
           })}
         </List>
+        <DatePicker
+          startDate={this.state.pickerDate}
+          minDate={this.startPickerDate}
+          maxDate={this.endPickerDate}
+          onChange={this.onDateSelected}
+          showTimeSelect
+          timeIntervals={1}
+          timeCaption="Time"
+          dateFormat="h:mm aa"
+        />
         <Actions>
           <TextInput
             value={this.state.text}
@@ -135,11 +153,18 @@ class MainTabPanel extends Component<Props, State> {
     this.setState({ text });
   };
 
+  private onDateSelected = (date: Date) => {
+    this.setState({
+      pickerDate: date,
+    });
+  };
+
   private onSendClicked = async () => {
     const message = this.state.text;
 
     this.setState({
       text: "",
+      pickerDate: new Date(),
     });
 
     if (!this.props.user) {
@@ -160,7 +185,7 @@ class MainTabPanel extends Component<Props, State> {
         message: {
           ...data,
           room: this.props.roomId,
-          dateToSend: Date.now() + 10000,
+          dateToSend: this.state.pickerDate.valueOf(),
           _id: "",
         },
       },
