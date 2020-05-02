@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "react-grid-system";
 import styled from "styled-components";
-import ContentContainer from "../ContentContainer";
 import variables from "../../styles/variables";
+import { signOutUser } from "../../utils/userHelper";
+import ContentContainer from "../ContentContainer";
 
 interface HeaderLink {
   path: string;
@@ -64,7 +65,7 @@ class Header extends Component<Props> {
                         </StyledLink>
                       );
                     })}
-                    <StyledButton onClick={this.signOut}>Sign Out</StyledButton>
+                    <StyledButton onClick={signOutUser}>Sign Out</StyledButton>
                   </>
                 </EndAligner>
               </Col>
@@ -74,17 +75,6 @@ class Header extends Component<Props> {
       </HeaderContainer>
     );
   }
-
-  private signOut = () => {
-    // @ts-ignore
-    const gapi = window.gapi;
-    const auth2 = gapi.auth2.getAuthInstance();
-    if (auth2) {
-      auth2.signOut().then(() => {
-        console.log("Signed out");
-      });
-    }
-  };
 }
 
 export default Header;
