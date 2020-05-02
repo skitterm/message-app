@@ -26,6 +26,10 @@ class PageWrapper extends Component<Props> {
               path: "/switchUser",
               label: "Switch User",
             },
+            {
+              path: "/users",
+              label: "Find Users",
+            },
           ]}
         />
         <ContentContainer>

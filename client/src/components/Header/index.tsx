@@ -42,7 +42,7 @@ const HeaderContainer = styled.header`
 
 const EndAligner = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  grid-template-columns: repeat(5, auto);
   grid-template-rows: 1fr;
   justify-content: end;
   grid-column-gap: 60px;

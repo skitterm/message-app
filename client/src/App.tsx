@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Messages from "./pages/Messages";
 import Profiles from "./pages/Profiles";
 import SwitchUser from "./pages/SwitchUser";
+import Users from "./pages/Users";
 
 interface State {
   user?: User;
@@ -45,6 +46,9 @@ class App extends Component<{}, State> {
             </Route>
             <Route path="/switchUser">
               <SwitchUser />
+            </Route>
+            <Route path="/users">
+              <Users />
             </Route>
             <Route path="/">
               <Index />

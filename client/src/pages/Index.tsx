@@ -52,7 +52,7 @@ class Index extends Component<Props, State> {
     return (
       <PageWrapper title="Welcome to the Messaging App">
         <h3>Hello there</h3>
-        <StyledButton id="sign-in-button" />
+        {!this.state.isSignedIn && <StyledButton id="sign-in-button" />}
       </PageWrapper>
     );
   }
@@ -67,6 +67,8 @@ class Index extends Component<Props, State> {
       },
       body: JSON.stringify({ idToken }),
     });
+
+    this.setState({ isSignedIn: true });
   };
 }
 
