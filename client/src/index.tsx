@@ -7,8 +7,7 @@ import * as serviceWorker from "./serviceWorker";
 
 const GlobalStyle = createGlobalStyle`
     * {
-        box-sizing: border-box;
-        color: ${variables.color.textDark};
+        box-sizing: border-box;        
     }
 
     html, body {
@@ -17,11 +16,16 @@ const GlobalStyle = createGlobalStyle`
         height: 100%;
         width: 100%;
         font-family: "Lato", sans-serif;
+        color: ${variables.color.textDark};
     }
 
     code {
         font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
         monospace;
+    }
+
+    a {
+        color: ${variables.color.textDark};
     }
 
     p {

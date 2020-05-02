@@ -4,17 +4,10 @@ import config from "../config";
 import PageWrapper from "./PageWrapper";
 
 const StyledButton = styled.button`
-  padding: 0;
-  border: 0;
+  border: none;
   box-shadow: none;
-  outline: none;
-  background: transparent;
-  cursor: pointer;
-  height: 50px;
-`;
-
-const StyledImage = styled.img`
-  height: 100%;
+  padding: 0;
+  background-color: transparent;
 `;
 
 interface Props {}
@@ -30,6 +23,14 @@ class Index extends Component<Props> {
       });
 
       console.log("is signed in:", GoogleAuth.isSignedIn.get());
+
+      googleAPI.signin2.render("sign-in-button", {
+        height: 50,
+        width: "auto",
+        theme: "dark",
+        longTitle: true,
+        onSuccess: this.onSignInSuccess,
+      });
     });
   }
 
@@ -37,16 +38,14 @@ class Index extends Component<Props> {
     return (
       <PageWrapper title="Welcome to the Messaging App">
         <h3>Hello there</h3>
-        <div className="g-signin2"></div>
-        <StyledButton>
-          <StyledImage
-            src="/google-sign-in-dark.png"
-            alt="Sign in with Google"
-          />
-        </StyledButton>
+        <StyledButton id="sign-in-button" />
       </PageWrapper>
     );
   }
+
+  private onSignInSuccess = () => {
+    console.log("signed in successfully");
+  };
 }
 
 export default Index;
