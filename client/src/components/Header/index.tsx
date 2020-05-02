@@ -14,10 +14,24 @@ interface Props {
   links: HeaderLink[];
 }
 
-const StyledLink = styled(Link)`
+const styles = `
   text-align: end;
   text-decoration: none;
   font-size: ${variables.fontSize.md};
+`;
+
+const StyledLink = styled(Link)`
+  ${styles}
+`;
+const StyledButton = styled.button`
+  ${styles}
+  background-color: transparent;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  font-family: "Lato", sans-serif;
+  cursor: pointer;
 `;
 
 const HeaderContainer = styled.header`
@@ -27,7 +41,7 @@ const HeaderContainer = styled.header`
 
 const EndAligner = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(4, auto);
   grid-template-rows: 1fr;
   justify-content: end;
   grid-column-gap: 60px;
@@ -42,13 +56,16 @@ class Header extends Component<Props> {
             <Row justify="end">
               <Col sm={12}>
                 <EndAligner>
-                  {this.props.links.map((link: HeaderLink) => {
-                    return (
-                      <StyledLink key={link.path} to={link.path}>
-                        {link.label}
-                      </StyledLink>
-                    );
-                  })}
+                  <>
+                    {this.props.links.map((link: HeaderLink) => {
+                      return (
+                        <StyledLink key={link.path} to={link.path}>
+                          {link.label}
+                        </StyledLink>
+                      );
+                    })}
+                    <StyledButton onClick={this.signOut}>Sign Out</StyledButton>
+                  </>
                 </EndAligner>
               </Col>
             </Row>
@@ -57,6 +74,17 @@ class Header extends Component<Props> {
       </HeaderContainer>
     );
   }
+
+  private signOut = () => {
+    // @ts-ignore
+    const gapi = window.gapi;
+    const auth2 = gapi.auth2.getAuthInstance();
+    if (auth2) {
+      auth2.signOut().then(() => {
+        console.log("Signed out");
+      });
+    }
+  };
 }
 
 export default Header;
