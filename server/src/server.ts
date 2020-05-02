@@ -1,5 +1,8 @@
 import express from "express";
 // @ts-ignore
+import googleAuthLibrary from "google-auth-library";
+const { OAuth2Client } = googleAuthLibrary;
+// @ts-ignore
 import dotenv from "dotenv";
 import UserModel from "./models/User";
 import RoomModel from "./models/Room";
@@ -8,8 +11,11 @@ import Socket from "./socket";
 
 dotenv.config({ path: "../.env" });
 
+const GOOGLE_CLIENT_ID = "239598225082-2ehdvkfbu6l3oc4aekt5pqrs7nlt0c4h";
+
 const socket = new Socket();
 socket.init();
+const authClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 const app = express();
 app.use(express.json());
@@ -97,6 +103,15 @@ app.use(express.json());
       await roomModel.addMessage(req.body.roomId, addedMessageId);
 
       res.send();
+    });
+
+    app.post("/token", async (req, res) => {
+      const ticket = await authClient.verifyIdToken({
+        idToken: req.body.idToken,
+      });
+      const payload = ticket.getPayload();
+      const userId = payload.sub;
+      console.log("G User ID: ", userId);
     });
   });
 })();

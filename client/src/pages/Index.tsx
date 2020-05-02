@@ -43,8 +43,16 @@ class Index extends Component<Props> {
     );
   }
 
-  private onSignInSuccess = () => {
-    console.log("signed in successfully");
+  private onSignInSuccess = async (googleUser: any) => {
+    const idToken = googleUser.getAuthResponse().id_token;
+
+    await fetch("/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ idToken }),
+    });
   };
 }
 
