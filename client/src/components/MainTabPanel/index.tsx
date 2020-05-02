@@ -1,5 +1,6 @@
 import React, { Component, RefObject, createRef } from "react";
 import styled from "styled-components";
+import { Calendar } from "react-feather";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { User, Message as IMessage } from "../../types";
@@ -8,6 +9,7 @@ import { injectUserContext, UserContextProps } from "../../context/UserContext";
 import Message from "../Message";
 import TextInput from "../TextInput";
 import Button from "../Button";
+import variables from "../../styles/variables";
 
 const Container = styled.div`
   display: flex;
@@ -32,7 +34,7 @@ const Actions = styled.div`
   right: 0;
   bottom: 0;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto auto;
   grid-column-gap: 12px;
   max-width: 70vw;
   padding-left: 16px;
@@ -114,16 +116,6 @@ class MainTabPanel extends Component<Props, State> {
             );
           })}
         </List>
-        <DatePicker
-          startDate={this.state.pickerDate}
-          minDate={this.startPickerDate}
-          maxDate={this.endPickerDate}
-          onChange={this.onDateSelected}
-          showTimeSelect
-          timeIntervals={1}
-          timeCaption="Time"
-          dateFormat="h:mm aa"
-        />
         <Actions>
           <TextInput
             value={this.state.text}
@@ -136,6 +128,21 @@ class MainTabPanel extends Component<Props, State> {
           >
             Send
           </Button>
+          <DatePicker
+            startDate={this.state.pickerDate}
+            minDate={this.startPickerDate}
+            maxDate={this.endPickerDate}
+            onChange={this.onDateSelected}
+            showTimeSelect
+            timeIntervals={1}
+            timeCaption="Time"
+            dateFormat="h:mm aa"
+            customInput={
+              <Button isDisabled={this.state.text.length === 0}>
+                <Calendar color={variables.color.white} />
+              </Button>
+            }
+          />
         </Actions>
       </Container>
     );
