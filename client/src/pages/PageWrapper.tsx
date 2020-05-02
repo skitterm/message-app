@@ -15,8 +15,8 @@ class PageWrapper extends Component<Props> {
         <Header
           links={[
             {
-              path: "/",
-              label: "Home",
+              path: "/messages",
+              label: "Messages",
             },
             {
               path: `/profiles/${this.props.user?._id || ""}`,

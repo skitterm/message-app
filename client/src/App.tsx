@@ -4,6 +4,7 @@ import { User } from "./types";
 import { setUserId, getUserId } from "./utils/userHelper";
 import UserContext from "./context/UserContext";
 import Index from "./pages/Index";
+import Messages from "./pages/Messages";
 import Profiles from "./pages/Profiles";
 import SwitchUser from "./pages/SwitchUser";
 
@@ -36,6 +37,9 @@ class App extends Component<{}, State> {
       <UserContext.Provider value={this.state}>
         <Router>
           <Switch>
+            <Route path="/messages">
+              <Messages />
+            </Route>
             <Route path="/profiles">
               <Profiles />
             </Route>
