@@ -28,7 +28,7 @@ interface State {
 
 interface Props extends UserContextProps {}
 
-class Users extends Component<Props, State> {
+class FindUsers extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -73,12 +73,14 @@ class Users extends Component<Props, State> {
     });
   };
 
-  private onUserClick = (userId: string) => {
+  private onUserClick = async (userId: string) => {
     if (this.props.user) {
-      //
+      await fetch("", {
+        method: "PUT",
+      });
     }
     // let the database know that there is a new room for person
   };
 }
 
-export default injectUserContext(Users);
+export default injectUserContext(FindUsers);

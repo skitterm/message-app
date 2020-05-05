@@ -23,7 +23,7 @@ class PageWrapper extends Component<Props> {
               label: "Profile",
             },
             {
-              path: "/users",
+              path: "/find-users",
               label: "Find Users",
             },
           ]}

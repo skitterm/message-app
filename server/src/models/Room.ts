@@ -37,6 +37,16 @@ class RoomModel extends Model {
     return filteredRooms;
   }
 
+  public async addItem(members: string[]) {
+    const collection = await this.getCollection();
+    const result = await collection.insertOne({
+      members,
+      messages: [],
+    });
+
+    return result.insertedId;
+  }
+
   public async addMessage(roomId: string, messageId: string) {
     const collection = await this.getCollection();
     await collection.updateOne(

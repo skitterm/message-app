@@ -5,7 +5,7 @@ import UserContext from "./context/UserContext";
 import Index from "./pages/Index";
 import Messages from "./pages/Messages";
 import Profiles from "./pages/Profiles";
-import Users from "./pages/Users";
+import FindUsers from "./pages/FindUsers";
 
 interface State {
   user?: User;
@@ -23,8 +23,8 @@ class App extends Component<{}, State> {
             <Route path="/profiles">
               <Profiles />
             </Route>
-            <Route path="/users">
-              <Users />
+            <Route path="/find-users">
+              <FindUsers />
             </Route>
             <Route path="/">
               <Index onUserAuthenticated={this.onUserSelected} />

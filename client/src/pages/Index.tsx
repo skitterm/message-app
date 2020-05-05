@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import config from "../config";
-import { User } from '../types';
+import { User } from "../types";
 import PageWrapper from "./PageWrapper";
 
 const StyledButton = styled.button`
@@ -82,7 +82,10 @@ class Index extends Component<Props, State> {
       });
     }
 
-    const userResponse = await fetch(`/users/${json.id}`);
+    const userResponse = await fetch(`/users/${json.id}`, {
+      method: "GET",
+    });
+
     const userJson = await userResponse.json();
     this.props.onUserAuthenticated(userJson);
 

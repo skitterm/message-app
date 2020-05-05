@@ -44,7 +44,7 @@ class UserModel extends Model {
     const collection = await this.getCollection();
     await collection.updateOne(
       {
-        _id: new ObjectID(id),
+        _id: id,
       },
       {
         $set: {
@@ -55,6 +55,20 @@ class UserModel extends Model {
         },
       }
     );
+  }
+
+  public async addRoom(userId: string, roomId: string) {
+    const collection = await this.getCollection();
+    const result = await collection.updateOne(
+      {
+        _id: userId,
+      },
+      {
+        $push: { rooms: roomId },
+      }
+    );
+
+    return result.upsertedId;
   }
 
   public async getAll() {

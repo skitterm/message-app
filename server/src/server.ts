@@ -38,6 +38,25 @@ app.use(express.json());
       }
     });
 
+    app.post("/users/:id/rooms", async (req, res) => {
+      const { userId, memberId } = req.body;
+      const user = await userModel.getById(userId);
+      let roomId = req.body.roomId;
+      if (!roomId) {
+        // create a room
+        roomId = await roomModel.addItem([userId, memberId]);
+      }
+      const room = await roomModel.getById(roomId);
+      if (room) {
+        // add that room to this user's rooms
+        await userModel.addRoom(userId, roomId);
+        // add room to the other user's rooms
+        await userModel.addRoom(memberId, roomId);
+      }
+
+      res.send();
+    });
+
     app.get("/users/:id", async (req, res) => {
       try {
         const user = await userModel.getById(req.params.id);
@@ -59,7 +78,7 @@ app.use(express.json());
         );
         res.send();
       } catch (error) {
-        //
+        console.error(error);
       }
     });
 
@@ -120,19 +139,25 @@ app.use(express.json());
     });
 
     app.post("/token", async (req, res) => {
-      const ticket = await authClient.verifyIdToken({
-        idToken: req.body.idToken,
-      });
-      const payload = ticket.getPayload();
+      try {
+        const ticket = await authClient.verifyIdToken({
+          idToken: req.body.idToken,
+        });
+        const payload = ticket.getPayload();
 
-      const user = userModel.getById(payload.sub);
+        const user = await userModel.getById(payload.sub);
+        console.log("user: ", user);
 
-      res.send({
-        id: payload.sub,
-        exists: !user,
-        firstName: payload.given_name,
-        lastName: payload.family_name,
-      });
+        res.send({
+          id: payload.sub,
+          exists: !!user,
+          firstName: payload.given_name,
+          lastName: payload.family_name,
+        });
+      } catch (error) {
+        console.error("ze error: ", error);
+        res.send();
+      }
     });
   });
 })();
