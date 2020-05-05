@@ -3,12 +3,9 @@ import { User } from "../types";
 
 export interface UserContextProps {
   user?: User;
-  updateUserId: (userId: string) => void;
 }
 
-const UserContext = createContext({
-  updateUserId: (userId: string) => {},
-});
+const UserContext = createContext({});
 
 /* 
     used guidance from https://stackoverflow.com/a/51717096

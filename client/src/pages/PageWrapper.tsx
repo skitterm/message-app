@@ -23,10 +23,6 @@ class PageWrapper extends Component<Props> {
               label: "Profile",
             },
             {
-              path: "/switchUser",
-              label: "Switch User",
-            },
-            {
               path: "/users",
               label: "Find Users",
             },

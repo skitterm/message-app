@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import config from "../config";
+import { User } from '../types';
 import PageWrapper from "./PageWrapper";
 
 const StyledButton = styled.button`
@@ -14,7 +15,9 @@ interface State {
   isSignedIn: boolean;
 }
 
-interface Props {}
+interface Props {
+  onUserAuthenticated: (user: User) => void;
+}
 
 class Index extends Component<Props, State> {
   constructor(props: Props) {
@@ -51,7 +54,6 @@ class Index extends Component<Props, State> {
   public render() {
     return (
       <PageWrapper title="Welcome to the Messaging App">
-        <h3>Hello there</h3>
         {!this.state.isSignedIn && <StyledButton id="sign-in-button" />}
       </PageWrapper>
     );
@@ -60,13 +62,29 @@ class Index extends Component<Props, State> {
   private onSignInSuccess = async (googleUser: any) => {
     const idToken = googleUser.getAuthResponse().id_token;
 
-    await fetch("/token", {
+    const response = await fetch("/token", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ idToken }),
     });
+    const json = await response.json();
+
+    if (!json.exists) {
+      await fetch("/users", {
+        method: "PUT",
+        body: JSON.stringify({
+          id: json.id,
+          firstName: json.firstName,
+          lastName: json.lastName,
+        }),
+      });
+    }
+
+    const userResponse = await fetch(`/users/${json.id}`);
+    const userJson = await userResponse.json();
+    this.props.onUserAuthenticated(userJson);
 
     this.setState({ isSignedIn: true });
   };

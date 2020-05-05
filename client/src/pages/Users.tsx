@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import { injectUserContext, UserContextProps } from "../context/UserContext";
 import Button from "../components/Button";
 import Avatar from "../components/Avatar";
 import PageWrapper from "./PageWrapper";
@@ -7,7 +8,7 @@ import PageWrapper from "./PageWrapper";
 const ListItem = styled.li`
   display: flex;
   align-items: center;
-  margin-bottom: 32px;
+  margin-bottom: 64px;
 `;
 
 const Details = styled.div`
@@ -17,11 +18,15 @@ const Details = styled.div`
   margin-left: 16px;
 `;
 
+const ItemTitle = styled.h3`
+  margin-top: 0;
+`;
+
 interface State {
   allUsers: any[];
 }
 
-interface Props {}
+interface Props extends UserContextProps {}
 
 class Users extends Component<Props, State> {
   constructor(props: Props) {
@@ -43,12 +48,14 @@ class Users extends Component<Props, State> {
           {this.state.allUsers.map((user) => {
             return (
               <ListItem key={user._id}>
-                <Avatar thumbnail={user.thumbnail} size="large" />
+                <Avatar thumbnail={user.thumbnail} size="medium" />
                 <Details>
-                  <h3>
+                  <ItemTitle>
                     {user.name.first} {user.name.last}
-                  </h3>
-                  <Button>Start messaging</Button>
+                  </ItemTitle>
+                  <Button onClick={this.onUserClick.bind(this, user._id)}>
+                    Message
+                  </Button>
                 </Details>
               </ListItem>
             );
@@ -65,6 +72,13 @@ class Users extends Component<Props, State> {
       allUsers: users,
     });
   };
+
+  private onUserClick = (userId: string) => {
+    if (this.props.user) {
+      //
+    }
+    // let the database know that there is a new room for person
+  };
 }
 
-export default Users;
+export default injectUserContext(Users);

@@ -2,8 +2,18 @@ import React, { Component } from "react";
 import styled from "styled-components";
 
 const Background = styled.div<{ color: string; size?: string }>`
-  width: ${(props) => (props.size === "large" ? "100px" : "50px")};
-  height: ${(props) => (props.size === "large" ? "100px" : "50px")};
+  width: ${(props) =>
+    props.size === "large"
+      ? "100px"
+      : props.size === "medium"
+      ? "75px"
+      : "50px"};
+  height: ${(props) =>
+    props.size === "large"
+      ? "100px"
+      : props.size === "medium"
+      ? "75px"
+      : "50px"};
   position: relative;
   overflow: hidden;
   background-color: ${(props) => props.color};
@@ -28,7 +38,7 @@ const Shape = styled.div<{
 
 interface Props {
   thumbnail: string;
-  size?: "small" | "large";
+  size?: "small" | "medium" | "large";
 }
 
 class Avatar extends Component<Props> {

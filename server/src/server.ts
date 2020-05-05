@@ -74,6 +74,21 @@ app.use(express.json());
       }
     });
 
+    app.put("/users", async (req, res) => {
+      const firstName = req.body.firstName;
+      const lastName = req.body.lastName;
+      const userId = req.body.id;
+
+      const user = userModel.getById(req.body.id);
+      // if user doesn't already exist, create a new user.
+
+      if (!user) {
+        userModel.addItem(userId, firstName, lastName);
+      }
+
+      res.send();
+    });
+
     app.get("/rooms/:id/messages", async (req, res) => {
       const messages = await messageModel.getAllByRoom(req.params.id);
 
@@ -109,16 +124,15 @@ app.use(express.json());
         idToken: req.body.idToken,
       });
       const payload = ticket.getPayload();
-      const userId = payload.sub;
-      const firstName = payload.given_name;
-      const lastName = payload.family_name;
 
-      const user = userModel.getById(userId);
-      // if user doesn't already exist, create a new user.
+      const user = userModel.getById(payload.sub);
 
-      if (!userId) {
-        userModel.addItem(userId, firstName, lastName);
-      }
+      res.send({
+        id: payload.sub,
+        exists: !user,
+        firstName: payload.given_name,
+        lastName: payload.family_name,
+      });
     });
   });
 })();
