@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import config from "../config";
 import { User } from "../types";
 import PageWrapper from "./PageWrapper";
 
@@ -11,53 +10,41 @@ const StyledButton = styled.button`
   background-color: transparent;
 `;
 
-interface State {
-  isSignedIn: boolean;
-}
-
 interface Props {
   onUserAuthenticated: (user: User) => void;
+  googleAPI?: any;
 }
 
-class Index extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      isSignedIn: false,
-    };
+class Index extends Component<Props> {
+  public componentDidMount() {
+    if (this.props.googleAPI) {
+      this.renderSignInButton();
+    }
   }
 
-  public componentDidMount() {
-    // @ts-ignore -- .gapi does exist
-    const googleAPI = window.gapi;
-    googleAPI.load("auth2", async () => {
-      const GoogleAuth = await googleAPI.auth2.init({
-        client_id: config.googleClientId,
-        cookiepolicy: "single-host-origin",
-      });
-
-      this.setState({ isSignedIn: GoogleAuth.isSignedIn.get() });
-
-      if (!this.state.isSignedIn) {
-        googleAPI.signin2.render("sign-in-button", {
-          height: 50,
-          width: "auto",
-          theme: "dark",
-          longTitle: true,
-          onSuccess: this.onSignInSuccess,
-        });
-      }
-    });
+  public componentDidUpdate(prevProps: Props) {
+    if (!prevProps.googleAPI && this.props.googleAPI) {
+      this.renderSignInButton();
+    }
   }
 
   public render() {
     return (
       <PageWrapper title="Welcome to the Messaging App">
-        {!this.state.isSignedIn && <StyledButton id="sign-in-button" />}
+        <StyledButton id="sign-in-button" />
       </PageWrapper>
     );
   }
+
+  private renderSignInButton = () => {
+    this.props.googleAPI.signin2.render("sign-in-button", {
+      height: 50,
+      width: "auto",
+      theme: "dark",
+      longTitle: true,
+      onSuccess: this.onSignInSuccess,
+    });
+  };
 
   private onSignInSuccess = async (googleUser: any) => {
     const idToken = googleUser.getAuthResponse().id_token;
@@ -91,8 +78,6 @@ class Index extends Component<Props, State> {
 
     const userJson = await userResponse.json();
     this.props.onUserAuthenticated(userJson);
-
-    this.setState({ isSignedIn: true });
   };
 }
 
