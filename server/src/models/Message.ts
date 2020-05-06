@@ -24,7 +24,7 @@ class MessageModel extends Model {
   ) {
     const collection = await this.getCollection();
     const result = await collection.insertOne({
-      sender: new ObjectID(senderId),
+      sender: senderId,
       timeSent,
       contents,
       room: new ObjectID(roomId),
