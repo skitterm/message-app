@@ -4,6 +4,7 @@ import { Container, Row, Col } from "react-grid-system";
 import styled from "styled-components";
 import variables from "../../styles/variables";
 import { signOutUser } from "../../utils/userHelper";
+import { injectUserContext, UserContextProps } from "../../context/UserContext";
 import ContentContainer from "../ContentContainer";
 
 interface HeaderLink {
@@ -11,7 +12,7 @@ interface HeaderLink {
   label: string;
 }
 
-interface Props {
+interface Props extends UserContextProps {
   links: HeaderLink[];
 }
 
@@ -65,7 +66,11 @@ class Header extends Component<Props> {
                         </StyledLink>
                       );
                     })}
-                    <StyledButton onClick={signOutUser}>Sign Out</StyledButton>
+                    {this.props.user && (
+                      <StyledButton onClick={signOutUser}>
+                        Sign Out
+                      </StyledButton>
+                    )}
                   </>
                 </EndAligner>
               </Col>
@@ -77,4 +82,4 @@ class Header extends Component<Props> {
   }
 }
 
-export default Header;
+export default injectUserContext(Header);

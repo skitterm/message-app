@@ -46,8 +46,6 @@ class App extends Component<Props, State> {
   }
 
   public render() {
-    const isAuthed = false;
-
     return (
       <UserContext.Provider value={this.state}>
         <Router>
@@ -55,7 +53,7 @@ class App extends Component<Props, State> {
             <Route
               path="/messages"
               render={({ location }) => {
-                return !isAuthed ? (
+                return !this.state.user ? (
                   <Redirect
                     to={{
                       pathname: "/",
@@ -70,7 +68,7 @@ class App extends Component<Props, State> {
             <Route
               path="/profiles"
               render={({ location }) => {
-                return !isAuthed ? (
+                return !this.state.user ? (
                   <Redirect
                     to={{
                       pathname: "/",
@@ -85,7 +83,7 @@ class App extends Component<Props, State> {
             <Route
               path="/find-users"
               render={({ location }) => {
-                return !isAuthed ? (
+                return !this.state.user ? (
                   <Redirect
                     to={{
                       pathname: "/",
@@ -100,10 +98,10 @@ class App extends Component<Props, State> {
             <Route
               path="/"
               render={({ location }) => {
-                return isAuthed ? (
+                return this.state.user ? (
                   <Redirect
                     to={{
-                      pathname: "/messages",
+                      pathname: "/find-users",
                       state: { from: location },
                     }}
                   />
