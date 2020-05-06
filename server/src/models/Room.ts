@@ -23,11 +23,10 @@ class RoomModel extends Model {
       ])
       .toArray();
 
-    const userObjectId = new ObjectID(userId);
     const filteredRooms = allRooms.filter((room) => {
       let hasMatch = false;
-      room.members.forEach((member: ObjectIDType) => {
-        if (member.equals(userObjectId)) {
+      room.members.forEach((member: string) => {
+        if (member === userId) {
           hasMatch = true;
         }
       });

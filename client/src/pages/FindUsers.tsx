@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { injectUserContext, UserContextProps } from "../context/UserContext";
+import { User } from "../types";
 import Button from "../components/Button";
 import Avatar from "../components/Avatar";
 import PageWrapper from "./PageWrapper";
@@ -68,18 +69,22 @@ class FindUsers extends Component<Props, State> {
   private getAllUsers = async () => {
     const usersRequest = await fetch("/users");
     const users = await usersRequest.json();
+
     this.setState({
-      allUsers: users,
+      allUsers: users.filter((user: User) => user._id !== this.props.user?._id),
     });
   };
 
-  private onUserClick = async (userId: string) => {
+  private onUserClick = async (memberId: string) => {
     if (this.props.user) {
-      await fetch("", {
-        method: "PUT",
+      await fetch(`/users/${this.props.user._id}/rooms`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({ memberId }),
       });
     }
-    // let the database know that there is a new room for person
   };
 }
 

@@ -101,7 +101,7 @@ class App extends Component<Props, State> {
                 return this.state.user ? (
                   <Redirect
                     to={{
-                      pathname: "/find-users",
+                      pathname: "/messages",
                       state: { from: location },
                     }}
                   />

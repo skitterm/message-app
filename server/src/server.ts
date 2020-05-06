@@ -39,7 +39,8 @@ app.use(express.json());
     });
 
     app.post("/users/:id/rooms", async (req, res) => {
-      const { userId, memberId } = req.body;
+      const userId = req.params.id;
+      const memberId = req.body.memberId;
       const user = await userModel.getById(userId);
       let roomId = req.body.roomId;
       if (!roomId) {
