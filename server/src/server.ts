@@ -60,9 +60,13 @@ app.use(express.json());
     app.get("/users/:id", async (req, res) => {
       try {
         const user = await userModel.getById(req.params.id);
+
+        if (!user) {
+          throw new Error("No user found");
+        }
+
         res.send(user);
       } catch (error) {
-        console.log(error);
         res.status(404).send({ message: "Unable to find a user with that ID" });
       }
     });
@@ -94,18 +98,22 @@ app.use(express.json());
     });
 
     app.put("/users", async (req, res) => {
-      const firstName = req.body.firstName;
-      const lastName = req.body.lastName;
-      const userId = req.body.id;
+      try {
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const userId = req.body.id;
 
-      const user = userModel.getById(req.body.id);
-      // if user doesn't already exist, create a new user.
+        const user = await userModel.getById(req.body.id);
+        // if user doesn't already exist, create a new user.
+        if (!user) {
+          await userModel.addItem(userId, firstName, lastName);
+        }
 
-      if (!user) {
-        userModel.addItem(userId, firstName, lastName);
+        res.send();
+      } catch (error) {
+        console.error("error in PUT /users: ", error);
+        res.status(500).send();
       }
-
-      res.send();
     });
 
     app.get("/rooms/:id/messages", async (req, res) => {
@@ -139,25 +147,19 @@ app.use(express.json());
     });
 
     app.post("/token", async (req, res) => {
-      try {
-        const ticket = await authClient.verifyIdToken({
-          idToken: req.body.idToken,
-        });
-        const payload = ticket.getPayload();
+      const ticket = await authClient.verifyIdToken({
+        idToken: req.body.idToken,
+      });
+      const payload = ticket.getPayload();
 
-        const user = await userModel.getById(payload.sub);
-        console.log("user: ", user);
+      const user = await userModel.getById(payload.sub);
 
-        res.send({
-          id: payload.sub,
-          exists: !!user,
-          firstName: payload.given_name,
-          lastName: payload.family_name,
-        });
-      } catch (error) {
-        console.error("ze error: ", error);
-        res.send();
-      }
+      res.send({
+        id: payload.sub,
+        exists: !!user,
+        firstName: payload.given_name,
+        lastName: payload.family_name,
+      });
     });
   });
 })();

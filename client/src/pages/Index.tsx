@@ -74,6 +74,9 @@ class Index extends Component<Props, State> {
     if (!json.exists) {
       await fetch("/users", {
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           id: json.id,
           firstName: json.firstName,
