@@ -16,17 +16,23 @@ interface Props extends UserContextProps {
   links: HeaderLink[];
 }
 
+const LinkWrapper = styled.div<{ isSelected: boolean }>`
+  padding: 5px 0;
+  border-bottom: 2px solid transparent;
+  border-bottom-color: ${(props) =>
+    props.isSelected ? variables.color.accent : "transparent"};
+`;
+
 const styles = `
   text-align: end;
   text-decoration: none;
-  font-size: ${variables.fontSize.md};
+  font-size: ${variables.fontSize.md};  
 `;
 
 const StyledLink = styled(Link)`
   ${styles}
 `;
 const StyledButton = styled.button`
-  ${styles}
   background-color: transparent;
   outline: none;
   box-shadow: none;
@@ -34,10 +40,11 @@ const StyledButton = styled.button`
   padding: 0;
   font-family: "Lato", sans-serif;
   cursor: pointer;
+  ${styles}
 `;
 
 const HeaderContainer = styled.header`
-  padding: 20px 0;
+  padding: 15px 0;
   border-bottom: 2px solid ${variables.color.offWhite};
 `;
 
@@ -61,15 +68,20 @@ class Header extends Component<Props> {
                   <>
                     {this.props.links.map((link: HeaderLink) => {
                       return (
-                        <StyledLink key={link.path} to={link.path}>
-                          {link.label}
-                        </StyledLink>
+                        <LinkWrapper
+                          key={link.path}
+                          isSelected={link.path === window.location.pathname}
+                        >
+                          <StyledLink to={link.path}>{link.label}</StyledLink>
+                        </LinkWrapper>
                       );
                     })}
                     {this.props.user && (
-                      <StyledButton onClick={signOutUser}>
-                        Sign Out
-                      </StyledButton>
+                      <LinkWrapper isSelected={false}>
+                        <StyledButton onClick={signOutUser}>
+                          Sign Out
+                        </StyledButton>
+                      </LinkWrapper>
                     )}
                   </>
                 </EndAligner>

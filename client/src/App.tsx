@@ -33,12 +33,11 @@ class App extends Component<Props, State> {
 
   public componentDidMount() {
     this.googleAPI.load("auth2", async () => {
-      const GoogleAuth = await this.googleAPI.auth2.init({
+      await this.googleAPI.auth2.init({
         client_id: config.googleClientId,
         cookiepolicy: "single-host-origin",
       });
 
-      console.log("is signed in: ", GoogleAuth.isSignedIn.get());
       this.setState({
         isGoogleAPILoaded: true,
       });
