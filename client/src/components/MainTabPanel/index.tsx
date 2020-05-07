@@ -111,7 +111,6 @@ class MainTabPanel extends Component<Props, State> {
                 time={message.message.timeSent}
                 thumbnail={message.user.thumbnail}
                 contents={message.message.contents}
-                isUnread={message.isUnread}
               />
             );
           })}

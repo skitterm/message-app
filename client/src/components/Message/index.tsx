@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import Avatar from "../Avatar";
-import Alert from "../Alert";
 import variables from "../../styles/variables";
 
 export interface MessageProps {
@@ -9,7 +8,6 @@ export interface MessageProps {
   time: number;
   thumbnail: string;
   contents: string;
-  isUnread?: boolean;
 }
 
 const Container = styled.li`
@@ -52,7 +50,6 @@ export const Message = (props: MessageProps) => {
 
   return (
     <Container>
-      {props.isUnread && <Alert size="normal" />}
       <Avatar thumbnail={props.thumbnail} />
       <div>
         <FirstRow>

@@ -102,8 +102,21 @@ class Messages extends Component<Props, State> {
   }
 
   private onTabClicked = (roomId: string) => {
+    const index = this.state.rooms.findIndex(
+      (item) => item.room._id === roomId
+    );
+    let newRooms: ClientRoom[] = [];
+    if (index) {
+      const clientRoom = this.state.rooms[index];
+      const newClientRoom = Object.assign({}, clientRoom, {
+        hasUnreadMessage: false,
+      });
+      newRooms = this.state.rooms.slice(0);
+      newRooms.splice(index, 1, newClientRoom);
+    }
     this.setState({
       selectedRoomId: roomId,
+      rooms: newRooms.length > 0 ? newRooms : this.state.rooms,
     });
   };
 
@@ -173,7 +186,7 @@ class Messages extends Component<Props, State> {
       if (clientRoomIndex !== -1) {
         const clientRoom = this.state.rooms[clientRoomIndex];
         const newClientRoom = Object.assign({}, clientRoom, {
-          hasUnreadMessage: true,
+          hasUnreadMessage: clientRoom.room._id !== this.state.selectedRoomId,
         });
         const newRooms = this.state.rooms.slice(0);
         newRooms.splice(clientRoomIndex, 1, newClientRoom);
