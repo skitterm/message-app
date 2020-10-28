@@ -14,7 +14,6 @@ dotenv.config({ path: "../.env" });
 const GOOGLE_CLIENT_ID = "239598225082-2ehdvkfbu6l3oc4aekt5pqrs7nlt0c4h";
 
 const socket = new Socket();
-socket.init();
 const authClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 const app = express();
