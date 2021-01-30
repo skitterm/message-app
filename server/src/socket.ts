@@ -12,10 +12,8 @@ class Socket {
   private clients: UserClient[];
 
   constructor() {
-    this.clients = [];
-  }
+    this.clients = [];        
 
-  public init() {
     this.webSocketServer = new WebSocket.Server({ port: 3002 });
 
     this.webSocketServer.on("connection", (webSocket) => {
@@ -81,6 +79,10 @@ class Socket {
         }
       });
     });
+  }  
+
+  public getClients() {
+    return this.clients;
   }
 
   private sendMessage = (data: any) => {
