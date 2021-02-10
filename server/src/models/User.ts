@@ -10,8 +10,8 @@ class UserModel extends Model {
   public async getById(id: string) {
     const collection = await this.getCollection();
     const item = await collection.findOne({
-      _id: id,
-    });
+      _id: new ObjectID(id),
+    });    
 
     return item;
   }
@@ -19,7 +19,7 @@ class UserModel extends Model {
   public async addItem(id: string, firstName: string, lastName: string) {
     const collection = await this.getCollection();
     const result = await collection.insertOne({
-      _id: id,
+      _id: new ObjectID(id),
       name: {
         first: firstName,
         last: lastName,
@@ -44,7 +44,7 @@ class UserModel extends Model {
     const collection = await this.getCollection();
     await collection.updateOne(
       {
-        _id: id,
+        _id: new ObjectID(id),
       },
       {
         $set: {
@@ -61,10 +61,10 @@ class UserModel extends Model {
     const collection = await this.getCollection();
     const result = await collection.updateOne(
       {
-        _id: userId,
+        _id: new ObjectID(userId),
       },
       {
-        $push: { rooms: roomId },
+        $push: { rooms: new ObjectID(roomId) },
       }
     );
 

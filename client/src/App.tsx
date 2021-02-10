@@ -6,7 +6,6 @@ import {
   Redirect,
 } from "react-router-dom";
 import { User } from "./types";
-import config from "./config";
 import UserContext from "./context/UserContext";
 import Index from "./pages/Index";
 import Messages from "./pages/Messages";
@@ -25,23 +24,38 @@ class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.state = { isGoogleAPILoaded: false };
+    this.state = { 
+      isGoogleAPILoaded: false, 
+    };
 
     // @ts-ignore -- .gapi does exist
     this.googleAPI = window.gapi;
   }
 
-  public componentDidMount() {
-    this.googleAPI.load("auth2", async () => {
-      await this.googleAPI.auth2.init({
-        client_id: config.googleClientId,
-        cookiepolicy: "single-host-origin",
-      });
+  public async componentDidMount() {
+    const id = '6015aa416131eb0a74e89e52'
+    // get the first user... return that for now
+    try {
+      const userResponse = await fetch(`/users/${id}`);
+      if (userResponse.status !== 200) {
+        throw new Error(userResponse.statusText);
+      }
+      const user = await userResponse.json();
+      this.setState({ user });
+    } catch(err) {
+      console.error('Unable to find user');
+    }
 
-      this.setState({
-        isGoogleAPILoaded: true,
-      });
-    });
+    // this.googleAPI.load("auth2", async () => {
+    //   await this.googleAPI.auth2.init({
+    //     client_id: config.googleClientId,
+    //     cookiepolicy: "single-host-origin",
+    //   });
+
+    //   this.setState({
+    //     isGoogleAPILoaded: true,
+    //   });
+    // });
   }
 
   public render() {
