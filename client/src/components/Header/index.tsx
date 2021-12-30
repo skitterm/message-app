@@ -6,6 +6,8 @@ import variables from "../../styles/variables";
 import { signOutUser } from "../../utils/userHelper";
 import { injectUserContext, UserContextProps } from "../../context/UserContext";
 import ContentContainer from "../ContentContainer";
+import Avatar from "../Avatar";
+import Dropdown from "../Dropdown";
 
 interface HeaderLink {
   path: string;
@@ -77,11 +79,21 @@ class Header extends Component<Props> {
                       );
                     })}
                     {this.props.user && (
-                      <LinkWrapper isSelected={false}>
-                        <StyledButton onClick={signOutUser}>
-                          Sign Out
-                        </StyledButton>
-                      </LinkWrapper>
+                      <>
+                        <Dropdown
+                          target={
+                            <Avatar
+                              size="extra-small"
+                              thumbnail={this.props.user.thumbnail}
+                            />
+                          }
+                        />
+                        <LinkWrapper isSelected={false}>
+                          <StyledButton onClick={signOutUser}>
+                            Sign Out
+                          </StyledButton>
+                        </LinkWrapper>
+                      </>
                     )}
                   </>
                 </EndAligner>
