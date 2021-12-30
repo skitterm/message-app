@@ -7,13 +7,17 @@ const Background = styled.div<{ color: string; size?: string }>`
       ? "100px"
       : props.size === "medium"
       ? "75px"
-      : "50px"};
+      : props.size === "small"
+      ? "50px"
+      : "30px"};
   height: ${(props) =>
     props.size === "large"
       ? "100px"
       : props.size === "medium"
       ? "75px"
-      : "50px"};
+      : props.size === "small"
+      ? "50px"
+      : "30px"};
   position: relative;
   overflow: hidden;
   background-color: ${(props) => props.color};
@@ -38,7 +42,7 @@ const Shape = styled.div<{
 
 interface Props {
   thumbnail: string;
-  size?: "small" | "medium" | "large";
+  size?: "extra-small" | "small" | "medium" | "large";
 }
 
 class Avatar extends Component<Props> {
