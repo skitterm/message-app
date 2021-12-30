@@ -1,9 +1,8 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { FC } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { Container, Row, Col } from "react-grid-system";
 import styled from "styled-components";
 import variables from "../../styles/variables";
-import { signOutUser } from "../../utils/userHelper";
 import { injectUserContext, UserContextProps } from "../../context/UserContext";
 import ContentContainer from "../ContentContainer";
 import Avatar from "../Avatar";
@@ -58,52 +57,60 @@ const EndAligner = styled.div`
   grid-column-gap: 60px;
 `;
 
-class Header extends Component<Props> {
-  public render() {
-    return (
-      <HeaderContainer>
-        <ContentContainer>
-          <Container>
-            <Row justify="end">
-              <Col sm={12}>
-                <EndAligner>
-                  <>
-                    {this.props.links.map((link: HeaderLink) => {
-                      return (
-                        <LinkWrapper
-                          key={link.path}
-                          isSelected={link.path === window.location.pathname}
-                        >
-                          <StyledLink to={link.path}>{link.label}</StyledLink>
-                        </LinkWrapper>
-                      );
-                    })}
-                    {this.props.user && (
-                      <>
-                        <Dropdown
-                          target={
-                            <Avatar
-                              size="extra-small"
-                              thumbnail={this.props.user.thumbnail}
-                            />
-                          }
+const Header: FC<Props> = (props) => {
+  const history = useHistory();
+
+  return (
+    <HeaderContainer>
+      <ContentContainer>
+        <Container>
+          <Row justify="end">
+            <Col sm={12}>
+              <EndAligner>
+                <>
+                  {props.links.map((link: HeaderLink) => {
+                    return (
+                      <LinkWrapper
+                        key={link.path}
+                        isSelected={link.path === window.location.pathname}
+                      >
+                        <StyledLink to={link.path}>{link.label}</StyledLink>
+                      </LinkWrapper>
+                    );
+                  })}
+                  {props.user && (
+                    <Dropdown
+                      target={
+                        <Avatar
+                          size="extra-small"
+                          thumbnail={props.user.thumbnail}
                         />
-                        <LinkWrapper isSelected={false}>
-                          <StyledButton onClick={signOutUser}>
-                            Sign Out
-                          </StyledButton>
-                        </LinkWrapper>
-                      </>
-                    )}
-                  </>
-                </EndAligner>
-              </Col>
-            </Row>
-          </Container>
-        </ContentContainer>
-      </HeaderContainer>
-    );
-  }
+                      }
+                      items={[
+                        {
+                          id: 'about-user',
+                          label: `${props.user.name.first} ${props.user.name.last}`,
+                          onClick: () => {
+                            history.push(`/profiles/${props.user?._id || ""}`)
+                          }
+                        },
+                        {
+                          id: 'sign-out',
+                          label: 'Sign Out',
+                          onClick: () => {
+                            window.location.href = window.location.origin;
+                          }
+                      }]}
+                    />
+                  )}
+                </>
+              </EndAligner>
+            </Col>
+          </Row>
+        </Container>
+      </ContentContainer>
+    </HeaderContainer>
+  );
 }
 
 export default injectUserContext(Header);
