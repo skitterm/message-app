@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run run-server",
-    "compile": "tsc-watch --onSuccess \"npx renamer --path-element ext --find \".js\" --replace \".mjs\" built/**/* --force",
+    "start": "npm run compile && npm run run-server",
+    "compile": "tsc && npx renamer --path-element ext --find \".js\" --replace \".mjs\" built/**/* --force",
     "run-server": "node --es-module-specifier-resolution=node built/server.mjs \" --onFailure \" echo COMPILATION FAILED\""
   },
   "author": "",
