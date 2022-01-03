@@ -1,1 +1,1 @@
-web: node server/built/server.mjs
+web: node ../server/built/server.mjs
