@@ -25,21 +25,20 @@ class RoomModel extends Model {
 
     const filteredRooms = allRooms.filter((room) => {
       let hasMatch = false;
-      room.members.forEach((member: string) => {
-        if (member === userId) {
+      room.members.forEach((member: ObjectIDType) => {
+        if (member.toHexString() === userId) {
           hasMatch = true;
         }
       });
       return hasMatch;
     });
-
     return filteredRooms;
   }
 
   public async addItem(members: string[]) {
     const collection = await this.getCollection();
     const result = await collection.insertOne({
-      members,
+      members: members.map((member) => new ObjectID(member)),
       messages: [],
     });
 
