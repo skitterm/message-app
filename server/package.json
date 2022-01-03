@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc-watch --onSuccess \"npx renamer --path-element ext --find \".js\" --replace \".mjs\" built/**/* --force && node --es-module-specifier-resolution=node built/server.mjs\" --onFailure \" echo COMPILATION FAILED\""
+    "start": "npm run run-server",
+    "compile": "tsc-watch --onSuccess \"npx renamer --path-element ext --find \".js\" --replace \".mjs\" built/**/* --force",
+    "run-server": "node --es-module-specifier-resolution=node built/server.mjs \" --onFailure \" echo COMPILATION FAILED\""
   },
   "author": "",
   "license": "ISC",

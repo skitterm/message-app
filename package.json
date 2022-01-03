@@ -10,7 +10,8 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"npm start --prefix server\" \"npm start --prefix client\""
+    "start": "concurrently \"npm start --prefix server\" \"npm start --prefix client\"",
+    "postinstall": "cd server && npm install && cd .. && cd client && npm install"
   },
   "repository": {
     "type": "git",
