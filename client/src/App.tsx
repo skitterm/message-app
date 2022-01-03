@@ -24,38 +24,12 @@ class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.state = { 
-      isGoogleAPILoaded: false, 
+    this.state = {
+      isGoogleAPILoaded: false,
     };
 
     // @ts-ignore -- .gapi does exist
     this.googleAPI = window.gapi;
-  }
-
-  public async componentDidMount() {
-    const id = '6015aa416131eb0a74e89e52'
-    // get the first user... return that for now
-    try {
-      const userResponse = await fetch(`/users/${id}`);
-      if (userResponse.status !== 200) {
-        throw new Error(userResponse.statusText);
-      }
-      const user = await userResponse.json();
-      this.setState({ user });
-    } catch(err) {
-      console.error('Unable to find user');
-    }
-
-    // this.googleAPI.load("auth2", async () => {
-    //   await this.googleAPI.auth2.init({
-    //     client_id: config.googleClientId,
-    //     cookiepolicy: "single-host-origin",
-    //   });
-
-    //   this.setState({
-    //     isGoogleAPILoaded: true,
-    //   });
-    // });
   }
 
   public render() {
@@ -114,17 +88,12 @@ class App extends Component<Props, State> {
                 return this.state.user ? (
                   <Redirect
                     to={{
-                      pathname: "/messages",
+                      pathname: "/find-users",
                       state: { from: location },
                     }}
                   />
                 ) : (
-                  <Index
-                    onUserAuthenticated={this.onUserSelected}
-                    googleAPI={
-                      this.state.isGoogleAPILoaded ? this.googleAPI : undefined
-                    }
-                  />
+                  <Index onUserSelected={this.onUserSelected.bind(this)} />
                 );
               }}
             ></Route>

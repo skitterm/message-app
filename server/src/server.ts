@@ -1,4 +1,7 @@
 import express from "express";
+
+import mongodb, { ObjectID, Collection } from "mongodb";
+const { MongoClient } = mongodb;
 // @ts-ignore
 import googleAuthLibrary from "google-auth-library";
 const { OAuth2Client } = googleAuthLibrary;
@@ -161,6 +164,84 @@ app.use(express.json());
         firstName: payload.given_name,
         lastName: payload.family_name,
       });
+    });
+
+    app.get("/demo", async (request, response) => {
+      const runTheDB = async () => {
+        const client = new MongoClient(process.env.DB_URL as string, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        });
+
+        await client.connect();
+        const db = client.db("messageApp");
+
+        const messagesCollection = db.collection("messages");
+        const roomsCollection = db.collection("rooms");
+        const usersCollection = db.collection("users");
+
+        await messagesCollection.deleteMany({});
+        await roomsCollection.deleteMany({});
+        await usersCollection.deleteMany({});
+
+        const userItems = [
+          {
+            name: {
+              first: "Bob",
+              last: "Johnson",
+            },
+            timeZone: "(UTC-07:00) Pacific Time (US & Canada)",
+            thumbnail:
+              "bc=#CBF13C;st=sq,sbc=#D061B2,sds=56%,ssx=66%,ssy=2%,or=h;st=sq,sbc=#5135F2,sds=35%,ssx=83%,ssy=33%,or=v;st=rt,sbc=#088395,sds=31%,ssx=17%,ssy=40%,or=h",
+            workingHours: [],
+            rooms: [],
+            unreadMessages: [],
+          },
+          {
+            name: {
+              first: "Joe",
+              last: "West",
+            },
+            timeZone: "(UTC-07:00) Pacific Time (US & Canada)",
+            thumbnail:
+              "bc=#F9A37D;st=cr,sbc=#2D4CFC,sds=37%,ssx=26%,ssy=42%,or=h",
+            workingHours: [],
+            rooms: [],
+            unreadMessages: [],
+          },
+          {
+            name: {
+              first: "Dave",
+              last: "Sanchez",
+            },
+            timeZone: "(UTC-05:00) Eastern Time (US & Canada)",
+            thumbnail:
+              "bc=#26D516;st=rt,sbc=#3077D8,sds=43%,ssx=22%,ssy=8%,or=h;st=rt,sbc=#3C6122,sds=60%,ssx=17%,ssy=0%,or=h;st=rt,sbc=#AB988E,sds=27%,ssx=5%,ssy=19%,or=v;st=cr,sbc=#A1BEFA,sds=51%,ssx=73%,ssy=44%,or=h",
+            workingHours: [],
+            rooms: [],
+            unreadMessages: [],
+          },
+        ];
+
+        await hydrateCollection(usersCollection, userItems, "users");
+
+        const allUsers = await usersCollection.find({}).toArray();
+
+        client.close();
+        response.send(allUsers);
+      };
+
+      const hydrateCollection = async (
+        collection: Collection,
+        items: any[],
+        label: string
+      ) => {
+        await collection.insertMany(items);
+        const itemsCount = await collection.countDocuments({});
+        console.log(`Inserted ${itemsCount} ${label}`);
+      };
+
+      await runTheDB();
     });
   });
 })();
