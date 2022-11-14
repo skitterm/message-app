@@ -19,7 +19,7 @@
     "react-feather": "^2.0.3",
     "react-grid-system": "^6.3.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.0",
+    "react-scripts": "5.0.1",
     "styled-components": "^5.1.0",
     "timezones.json": "^1.5.2",
     "typescript": "^3.7.5"
@@ -53,7 +53,7 @@
     "@storybook/addon-links": "^5.3.17",
     "@storybook/addons": "^5.3.17",
     "@storybook/preset-create-react-app": "^2.1.0",
-    "@storybook/react": "^5.3.17",
+    "@storybook/react": "^6.5.13",
     "@types/styled-components": "^5.0.1"
   }
 }
