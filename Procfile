@@ -1,0 +1,1 @@
+web: node ../server/built/server.mjs

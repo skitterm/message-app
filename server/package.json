@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc-watch --onSuccess \"npx renamer --path-element ext --find \".js\" --replace \".mjs\" built/**/* --force && node --es-module-specifier-resolution=node built/server.mjs\" --onFailure \" echo COMPILATION FAILED\""
+    "start": "npm run compile && npm run run-server",
+    "compile": "tsc && npx renamer --path-element ext --find \".js\" --replace \".mjs\" built/**/* --force",
+    "run-server": "node --es-module-specifier-resolution=node built/server.mjs --onFailure \" echo COMPILATION FAILED\""
   },
   "author": "",
   "license": "ISC",
@@ -17,7 +19,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "google-auth-library": "^6.0.0",
-    "mongodb": "^3.5.5",
+    "mongodb": "^3.6.4",
     "renamer": "^2.0.0",
     "typescript": "^3.8.3",
     "ws": "^7.2.3"

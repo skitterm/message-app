@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { RouteComponentProps } from "react-router";
 import styled from "styled-components";
 import { injectUserContext, UserContextProps } from "../context/UserContext";
 import { User } from "../types";
-import Button from "../components/Button";
-import Avatar from "../components/Avatar";
 import PageWrapper from "./PageWrapper";
+import UsersList from "../components/UsersList";
 
 const ListItem = styled.li`
   display: flex;
@@ -27,7 +28,7 @@ interface State {
   allUsers: any[];
 }
 
-interface Props extends UserContextProps {}
+interface Props extends UserContextProps, RouteComponentProps {}
 
 class FindUsers extends Component<Props, State> {
   constructor(props: Props) {
@@ -44,24 +45,12 @@ class FindUsers extends Component<Props, State> {
 
   public render() {
     return (
-      <PageWrapper title="Connect with other users">
-        <ul>
-          {this.state.allUsers.map((user) => {
-            return (
-              <ListItem key={user._id}>
-                <Avatar thumbnail={user.thumbnail} size="medium" />
-                <Details>
-                  <ItemTitle>
-                    {user.name.first} {user.name.last}
-                  </ItemTitle>
-                  <Button onClick={this.onUserClick.bind(this, user._id)}>
-                    Message
-                  </Button>
-                </Details>
-              </ListItem>
-            );
-          })}
-        </ul>
+      <PageWrapper title="Who would you like to chat with?">
+        <UsersList
+          users={this.state.allUsers}
+          onItemClick={this.onUserClick.bind(this)}
+          itemButtonLabel="Message"
+        />
       </PageWrapper>
     );
   }
@@ -75,17 +64,22 @@ class FindUsers extends Component<Props, State> {
     });
   };
 
-  private onUserClick = async (memberId: string) => {
+  private onUserClick = async (member: User) => {
+    const url = window.location.origin + "?userId=" + member._id;
+    window.open(url, "_blank", "noopener");
+
     if (this.props.user) {
       await fetch(`/users/${this.props.user._id}/rooms`, {
         headers: {
           "Content-Type": "application/json",
         },
         method: "POST",
-        body: JSON.stringify({ memberId }),
+        body: JSON.stringify({ memberId: member._id }),
       });
+
+      this.props.history.push("/messages");
     }
   };
 }
 
-export default injectUserContext(FindUsers);
+export default withRouter(injectUserContext(FindUsers));
